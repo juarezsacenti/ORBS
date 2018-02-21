@@ -1,0 +1,191 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:recont="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#">
+    <owl:Ontology rdf:about="http://www.lapesd.inf.ufsc.br/ontology/recont.owl">
+        <owl:versionIRI rdf:resource="http://www.lapesd.inf.ufsc.br/ontology/recont.owl/2.0.0"/>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.lapesd.inf.ufsc.br/ontology/recont.owl#access -->
+
+    <owl:ObjectProperty rdf:about="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#access">
+        <rdfs:subPropertyOf rdf:resource="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#interactsWith"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.lapesd.inf.ufsc.br/ontology/recont.owl#doInteraction -->
+
+    <owl:ObjectProperty rdf:about="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#doInteraction">
+        <owl:inverseOf rdf:resource="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#isDoneBy"/>
+        <rdfs:domain rdf:resource="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Audience"/>
+        <rdfs:range rdf:resource="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Interaction"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.lapesd.inf.ufsc.br/ontology/recont.owl#happensWith -->
+
+    <owl:ObjectProperty rdf:about="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#happensWith">
+        <owl:inverseOf rdf:resource="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#isAffectedBy"/>
+        <rdfs:domain rdf:resource="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Interaction"/>
+        <rdfs:range rdf:resource="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Item"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.lapesd.inf.ufsc.br/ontology/recont.owl#hasFI -->
+
+    <owl:ObjectProperty rdf:about="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#hasFI">
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Audience"/>
+                    <rdf:Description rdf:about="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Item"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+        <rdfs:range rdf:resource="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Fator_of_interest"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.lapesd.inf.ufsc.br/ontology/recont.owl#interactsWith -->
+
+    <owl:ObjectProperty rdf:about="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#interactsWith">
+        <rdfs:domain rdf:resource="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Audience"/>
+        <rdfs:range rdf:resource="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Item"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.lapesd.inf.ufsc.br/ontology/recont.owl#isAffectedBy -->
+
+    <owl:ObjectProperty rdf:about="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#isAffectedBy"/>
+    
+
+
+    <!-- http://www.lapesd.inf.ufsc.br/ontology/recont.owl#isDoneBy -->
+
+    <owl:ObjectProperty rdf:about="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#isDoneBy"/>
+    
+
+
+    <!-- http://www.lapesd.inf.ufsc.br/ontology/recont.owl#rates -->
+
+    <owl:ObjectProperty rdf:about="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#rates">
+        <rdfs:subPropertyOf rdf:resource="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#interactsWith"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.lapesd.inf.ufsc.br/ontology/recont.owl#hasRatingValue -->
+
+    <owl:DatatypeProperty rdf:about="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#hasRatingValue">
+        <rdfs:domain rdf:resource="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Rate"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.lapesd.inf.ufsc.br/ontology/recont.owl#hasRatingValue1-5 -->
+
+    <owl:DatatypeProperty rdf:about="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#hasRatingValue1-5">
+        <rdfs:subPropertyOf rdf:resource="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#hasRatingValue"/>
+        <rdfs:range>
+            <rdfs:Datatype>
+                <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+                <owl:withRestrictions rdf:parseType="Collection">
+                    <rdf:Description>
+                        <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</xsd:minInclusive>
+                    </rdf:Description>
+                    <rdf:Description>
+                        <xsd:maxInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#int">5</xsd:maxInclusive>
+                    </rdf:Description>
+                </owl:withRestrictions>
+            </rdfs:Datatype>
+        </rdfs:range>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Access -->
+
+    <owl:Class rdf:about="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Access">
+        <rdfs:subClassOf rdf:resource="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Interaction"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Audience -->
+
+    <owl:Class rdf:about="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Audience"/>
+    
+
+
+    <!-- http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Fator_of_interest -->
+
+    <owl:Class rdf:about="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Fator_of_interest"/>
+    
+
+
+    <!-- http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Interaction -->
+
+    <owl:Class rdf:about="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Interaction"/>
+    
+
+
+    <!-- http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Item -->
+
+    <owl:Class rdf:about="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Item"/>
+    
+
+
+    <!-- http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Rate -->
+
+    <owl:Class rdf:about="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Rate">
+        <rdfs:subClassOf rdf:resource="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Interaction"/>
+    </owl:Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi -->
+
