@@ -30,7 +30,7 @@ public class MultiAttributeFCPreparator implements Preparator {
     }
 	
 	private File convert2ItemModelFile(TrainingData trainingData) {
-		String path = "src/resources/main/mafc_itemModel.csv";
+		String path = "src/resources/main/temp/maucf_preparedData_item.csv";
 		AbstractMap<String, UserItemEvent> events = trainingData.getEvents();
 		userInItemModelFile = new HashSet<String>();
 		
@@ -42,7 +42,7 @@ public class MultiAttributeFCPreparator implements Preparator {
 			for(UserItemEvent event : events.values()) {
 					user = event.getUser();
 					userInItemModelFile.add(user);
-					writer.write(""+ user +","+event.getItem()+","+event.getRatingValue()+","+System.currentTimeMillis()+"\n");
+					writer.write(""+ user +","+event.getItem()+","+event.getRatingValue()+","+event.getTime()+"\n");
 	    	}
 			writer.flush();
 			writer.close();
@@ -56,10 +56,10 @@ public class MultiAttributeFCPreparator implements Preparator {
 	private File convert2AttributeModelFile() {
 		AbstractMap<String, UserItemEvent> events;
 		String path = "src/resources/test/userGenreNormalized-dataset.csv";
-		DataSourceParams params = new DataSourceParams("MultiAttributeFCRS", path, "\"", ",", false);
+		DataSourceParams params = new DataSourceParams(path, "\"", ",", false, false);
 		TrainingData bruteGenreModelFile = new DataSource(params).readTraining();
 
-		path = "src/resources/main/mafc_attributeModel.csv";
+		path = "src/resources/main/temp/maucf_preparedData_attribute.csv";
 		try {
 			OutputStream os = new FileOutputStream(path);
 			Writer writer = new OutputStreamWriter(os, "UTF-8");
@@ -69,7 +69,7 @@ public class MultiAttributeFCPreparator implements Preparator {
 			for(UserItemEvent event : events.values()) {
 				user = event.getUser();
 				if(userInItemModelFile.contains(user))	{
-					writer.write(""+ user +","+event.getItem()+","+event.getRatingValue()+","+System.currentTimeMillis()+"\n");
+					writer.write(""+ user +","+event.getItem()+","+event.getRatingValue()+","+0+"\n");
 				}
 			}
 			writer.flush();

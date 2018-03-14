@@ -3,6 +3,7 @@ package br.ufsc.lisa.sedim.core;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -26,7 +27,7 @@ public class UserCounter extends Counter {
 		HashMap<String, Integer> indirectHits;
 		String user, interaction, annotatedObject, upperLevel;
 		List<String> indirects;
-		
+		int userCount = 0;
 		/**
 		 * Counting direct hits
 		 */
@@ -37,37 +38,59 @@ public class UserCounter extends Counter {
 				interaction = userPropertyTriple.getObject();
 				for(RDFTriple triple3 : kb.getStatements(interaction, this.countedProperty, null) ) {
 					annotatedObject = triple3.getObject();
-					directHits.put(annotatedObject, directHits.getOrDefault(annotatedObject, 0) + 1);
+					int value = directHits.getOrDefault(annotatedObject, 0) + 1;
+					directHits.put(annotatedObject, value);
+					// if(userCount%1000==0) System.out.println(userCount+" "+user+" "+annotatedObject+" "+value+" DIRECT");
 				}
 			}
 			usersDirectHits.put(user, directHits);
+			userCount++;
 		}
 		
+		userCount = 0;
 		/**
 		 * Counting indirect hits
 		 */
-		for(Entry<String, HashMap<String, Integer>> entry1 : usersDirectHits.entrySet()) {
+		for(Entry<String, HashMap<String, Integer>> directHitsFromAnUser : usersDirectHits.entrySet()) {
 			indirectHits = new HashMap<String, Integer>();
-			indirects = new ArrayList<String>();
-			user = entry1.getKey();
+			//indirects = new ArrayList<String>();
+			user = directHitsFromAnUser.getKey();
+			HashSet<String> ancestors;
+			int value, ancestorValue;
 			
-			directHits = entry1.getValue();
-			for(Entry<String, Integer> entry2 : directHits.entrySet()) {
-				annotatedObject = entry2.getKey();
-				indirectHits.put(annotatedObject, entry2.getValue());
-				indirects.add(annotatedObject);
-			}
-
-			for(int i = 0; i < indirects.size(); ++i) {
-				String indirect = indirects.get(i);
-				for(RDFTriple triple : kb.getStatements(indirect, this.hierarchyProperty, null) ) {
-					upperLevel = triple.getObject();
-					indirectHits.put(upperLevel, indirectHits.getOrDefault(upperLevel, 0) + indirectHits.get(indirect));
-					indirects.add(upperLevel);
+			directHits = directHitsFromAnUser.getValue();
+			for(Entry<String, Integer> annotatedObjectAndValue : directHits.entrySet()) {
+				annotatedObject = annotatedObjectAndValue.getKey();
+				value = annotatedObjectAndValue.getValue();
+				indirectHits.put(annotatedObject, value);
+				//indirects.add(annotatedObject);
+				
+				ancestors = kb.getAncestors(this.hierarchyProperty, annotatedObject);
+				for(String ancestor : ancestors) {
+					ancestorValue = indirectHits.getOrDefault(ancestor, 0) + value;
+					indirectHits.put(ancestor, ancestorValue);
 				}
-			}		
-			usersIndirectHits.put(user, indirectHits);
-		}		
+			}
+		
+			/**
+			 *  Contagem de caminhos na hierarquia
+			 */			
+/**			for(int i = 0; i < indirects.size(); ++i) {
+ *				String indirect = indirects.get(i);
+ *				for(RDFTriple triple : kb.getStatements(indirect, this.hierarchyProperty, null) ) {
+ *					upperLevel = triple.getObject();
+ *					int value = indirectHits.getOrDefault(upperLevel, 0) + indirectHits.get(indirect);
+ *					indirectHits.put(upperLevel, value);
+ *					//if(userCount%1000==0) System.out.println(userCount+" "+user+" "+upperLevel+" "+value+" INDIRECT");
+ *					if(!indirects.contains(upperLevel)) {indirects.add(upperLevel);}
+ *				}
+ *			}		
+*/			usersIndirectHits.put(user, indirectHits);
+			userCount++;
+		}
+		//System.out.println(usersDirectHits.size()+" and "+usersIndirectHits.size());
+		//System.out.println(usersDirectHits.get("http://www.lapesd.inf.ufsc.br/projetos/sro/mysro.owl#audience206").toString());
+		//System.out.println(usersIndirectHits.get("http://www.lapesd.inf.ufsc.br/projetos/sro/mysro.owl#audience206").toString());
 	}
 	
 	/**

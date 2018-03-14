@@ -7,17 +7,12 @@ import br.ufsc.lisa.sedim.core.HierarchyTailorParams;
 import br.ufsc.lisa.sedim.core.SemanticExpansionerParams;
 
 public class PreparatorParams {
-	private String appName;
 	private ContextOntologyParams contextOntologyParams;
 	private DataSourceParams annotationSourceParams;
 	private SemanticExpansionerParams semanticExpansionerParams;
 	private HierarchyBuilderParams hierarchyBuilderParams;
 	private HierarchyTailorParams hierarchyTailorParams;
 	private HitAggregatorParams hitAggregatorParams;
-	
-	public String getAppName() {
-		return appName;
-	}
 	
 	public ContextOntologyParams getContextOntologyParams() {
 		return contextOntologyParams;

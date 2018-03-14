@@ -16,7 +16,7 @@
     <owl:Ontology rdf:about="http://www.lapesd.inf.ufsc.br/projetos/sro/contextOntology.owl">
         <owl:versionIRI rdf:resource="http://www.lapesd.inf.ufsc.br/projetos/sro/contextOntology/1.0.0"/>
         <owl:imports rdf:resource="http://www.movieontology.org/2009/11/09/movieontology.owl"/>
-        <owl:imports rdf:resource="http://www.lapesd.inf.ufsc.br/ontology/recont.owl/2.0.0"/>
+        <owl:imports rdf:resource="http://www.lapesd.inf.ufsc.br/ontology/2.0.0/recont.owl"/>
     </owl:Ontology>
     
 

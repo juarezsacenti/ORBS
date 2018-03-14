@@ -18,7 +18,7 @@ public class UserFCPreparator implements Preparator {
 
 	@Override
 	public PreparedData prepare(TrainingData trainingData) {
-		String path = "src/resources/main/preparedData.csv";
+		String path = "src/resources/main/temp/cucf_preparedData.csv";
 		AbstractMap<String, UserItemEvent> events = trainingData.getEvents();
 
 		try {
@@ -26,7 +26,7 @@ public class UserFCPreparator implements Preparator {
 			Writer writer = new OutputStreamWriter(os, "UTF-8");
 			
 			for(UserItemEvent event : events.values()) {
-					writer.write(""+event.getUser()+","+event.getItem()+","+event.getRatingValue()+","+System.nanoTime()+"\n");
+					writer.write(""+event.getUser()+","+event.getItem()+","+event.getRatingValue()+","+event.getTime()+"\n");
 	    	}
 			writer.flush();
 			writer.close();

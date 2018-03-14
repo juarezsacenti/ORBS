@@ -30,14 +30,15 @@ import br.ufsc.lapesd.sro.tokit.PreparedData;
 import br.ufsc.lapesd.sro.tokit.Query;
 
 public class UserFCAlgorithm extends Algorithm {
-	private double threshold;
-	private RecommenderBuilder builder;
+	private Recommender recommender;
 	private NearestNUserNeighborhood neighborhood;
 	private PearsonCorrelationSimilarity similarity;
+	private boolean isNativeEvaluatorEnabled;
+	private int neighborhoodSize;
 
 	public UserFCAlgorithm(AlgorithmParams algorithmParams) {
-		// TODO Auto-generated constructor stub
-		this.threshold = algorithmParams.getLambda();
+		this.isNativeEvaluatorEnabled = algorithmParams.isNativeEvaluatorEnabled();
+		this.neighborhoodSize = algorithmParams.getNeighborhoodSize();
 	}
 
 	@Override
@@ -49,20 +50,19 @@ public class UserFCAlgorithm extends Algorithm {
 			File file = ((UserFCPreparedData) preparedData).getFile();
 			DataModel mahoutModel = new FileDataModel(file);
 			this.similarity = new PearsonCorrelationSimilarity(mahoutModel);
-			this.neighborhood = new NearestNUserNeighborhood (100, similarity, mahoutModel);                
+			this.neighborhood = new NearestNUserNeighborhood (neighborhoodSize, similarity, mahoutModel);                
 			
-			this.builder = new RecommenderBuilder() {
-				public Recommender buildRecommender(DataModel model) throws TasteException {   
+			RecommenderBuilder builder = new RecommenderBuilder() {
+				public Recommender buildRecommender(DataModel model) throws TasteException {
 					UserSimilarity similarity = new PearsonCorrelationSimilarity(model);
-					UserNeighborhood neighborhood = new NearestNUserNeighborhood (100, similarity, model);         
+					UserNeighborhood neighborhood = new NearestNUserNeighborhood (neighborhoodSize, -10.d, similarity, model);         
 					return new GenericUserBasedRecommender(model, neighborhood, similarity);                
 				}
 			};
-		    
-			RecommenderEvaluator evaluator = new RMSRecommenderEvaluator();
-		    double evaluetion_rmse = evaluator.evaluate(builder, null, mahoutModel, threshold, 1.0);
-		    System.out.println("RMSE: " + evaluetion_rmse);	
-		
+			this.recommender = builder.buildRecommender(mahoutModel);
+
+			if(isNativeEvaluatorEnabled) {nativeEvaluator(builder, mahoutModel);}
+
 		    model = new UserFCModel(mahoutModel);
 		} catch (IOException e) {
     		System.out.println("There was an IO exception.");
@@ -73,7 +73,7 @@ public class UserFCAlgorithm extends Algorithm {
     	}    
 		return model;
 	}
-
+	
 	@Override
 	public PredictedResult predict(Model model, Query query) {
 		PredictedResult result = null;
@@ -88,39 +88,59 @@ public class UserFCAlgorithm extends Algorithm {
 			}
 			UserFCModel ufcModel = (UserFCModel) model;
 			DataModel itemModel = ufcModel.getModel();
-			Recommender recommender = this.builder.buildRecommender(itemModel);
 			
-		    System.out.println("\n\nRecommended items to user <"+userId+">: ");
 		    List<RecommendedItem> recommendedItens = recommender.recommend(userId, query.getNumber(), includeKnownItems);
 			for(RecommendedItem item : recommendedItens) {
-		    	System.out.println(item);
 		    	is = new ItemScore(""+item.getItemID(), item.getValue());
 				itemScores.add(is);
 			}
-	           
-			long[] theNeighborhood = neighborhood.getUserNeighborhood(userId);
-	        System.out.print("\nUser <"+userId+"> is similar to "+theNeighborhood.length+" users: ");
-		    for(long userSimilares: theNeighborhood){
-		    	System.out.print(userSimilares+", ");
-		    }
-
-			long[] mostSimilarUserIDs = ((GenericUserBasedRecommender) recommender).mostSimilarUserIDs(userId, 3);
-        	for(long recID:mostSimilarUserIDs) {
-                System.out.println("\nThe similarity between user <"+userId+"> and <"+recID+"> is: "+similarity.userSimilarity(userId, recID));
-                FastIDSet itemsFromUser = itemModel.getItemIDsFromUser(recID);
-                System.out.println("User <"+recID+"> has interactions with "+ itemsFromUser.size() +" items: ");
-            	for(long item:itemsFromUser) {
-            		System.out.print(" "+item);
-            	}
-            }
-    		System.out.println();			
+	        
+			analyse(userId, itemModel, 3);
 
     		result = new PredictedResult(itemScores);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
+		} catch (Exception e) { e.printStackTrace(); }
 		return result;
 	}
 
+	private void nativeEvaluator(RecommenderBuilder builder, DataModel model) throws TasteException {    
+		RecommenderEvaluator evaluator = new RMSRecommenderEvaluator();
+	    double evaluetion_rmse = evaluator.evaluate(builder, null, model, 0.7, 1.0);
+	    System.out.println("RMSE: "+evaluetion_rmse+"\n");	
+	}
+
+	private void analyse(long userId, DataModel model, int closestNeighborhoodSize) throws TasteException {    
+        System.out.println("#### ANALYSING USER <"+userId+"> ####");
+
+        // Items from userId's interactions
+        FastIDSet itemsFromUser = model.getItemIDsFromUser(userId);
+        System.out.println("|| has interactions with "+itemsFromUser.size()+" items:");
+		System.out.print("...");
+		for(long itemId : itemsFromUser) {
+    		System.out.print(" "+itemId+"<"+model.getPreferenceValue(userId, itemId)+">,");
+    	}
+		System.out.println();
+		
+        // Neighborhood of userId
+        long[] theNeighborhood = neighborhood.getUserNeighborhood(userId);
+        System.out.println("|| is similar to "+theNeighborhood.length+" users:");
+		System.out.print("...");
+		for(long userSimilares: theNeighborhood){
+	    	System.out.print(" "+userSimilares+",");
+	    }
+		System.out.println();			
+
+	    // Items from userId's closest neighborhood
+		long[] mostSimilarUserIds = ((GenericUserBasedRecommender) recommender).mostSimilarUserIDs(userId, closestNeighborhoodSize);
+    	for(long simUserId : mostSimilarUserIds) {
+            System.out.println("|| similarity degree with "+simUserId+": "+similarity.userSimilarity(userId, simUserId));
+            itemsFromUser = model.getItemIDsFromUser(simUserId);
+            System.out.println("... User <"+simUserId+"> has interactions with "+ itemsFromUser.size() +" items: ");
+    		System.out.print("...");
+    		for(long itemId : itemsFromUser) {
+        		System.out.print(" "+itemId+"<"+model.getPreferenceValue(simUserId, itemId)+">,");
+        	}
+    		System.out.println();		
+    	}
+		System.out.println();			
+	}
 }

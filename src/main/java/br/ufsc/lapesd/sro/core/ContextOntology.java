@@ -20,6 +20,13 @@ public class ContextOntology {
 	private final HashSet<Item> itemIndex;
 	private int eventCount = 0;
 	
+	private String p1 = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
+	private String p2; 
+	private String p3; 
+	private String p4; 
+	private String cAudience;
+	private String cItem;
+	
 	public ContextOntology(ContextOntologyParams cop) {
 		this.repositoryName = cop.getRepositoryName();
 		this.recommenderTaskOntologyURI = "http://www.lapesd.inf.ufsc.br/ontology/recont.owl";
@@ -30,15 +37,20 @@ public class ContextOntology {
 		for(ImportedOntologyParams iop : cop.getImportedOntologyParams()) {
 			this.kb.importOntology(iop.getOntologyURI(), iop.getFileLocation(), iop.getFileFormat());
 		}
+		
+		p2 = recommenderTaskOntologyURI + "#" + "doInteraction"; 
+		p3 = recommenderTaskOntologyURI + "#" + "happensWith"; 
+		p4 = recommenderTaskOntologyURI + "#" + "hasRatingValue1-5"; 
+		cAudience = recommenderTaskOntologyURI + "#" + "Audience";
+		cItem = recommenderTaskOntologyURI + "#" + "Item";
+
 	}
 
 	public void addUser(User user) {
 		if(!userIndex.contains(user)) {
 			userIndex.add(user);
 			String subject = this.ontologyURI+ "#" + "audience" + user.getEntityId();
-			String property = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
-			String object = this.recommenderTaskOntologyURI + "#" + "Audience";
-			kb.addObjectStatement(subject ,  property , object);
+			kb.addObjectStatement(subject , "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" , cAudience);
 		}
 	}
 
@@ -46,9 +58,7 @@ public class ContextOntology {
 		if(!itemIndex.contains(item)) {
 			itemIndex.add(item);
 			String subject = this.ontologyURI+ "#" + "item" + item.getEntityId();
-			String property = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
-			String object = this.recommenderTaskOntologyURI + "#" + "Item";
-			kb.addObjectStatement(subject ,  property , object);
+			kb.addObjectStatement(subject ,  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" , cItem);
 		}
 	}
 
@@ -57,15 +67,13 @@ public class ContextOntology {
 		String interaction = this.ontologyURI+ "#" + "rate" + ++eventCount;
 		String user = this.ontologyURI+ "#" + "audience" + event.getUser();
 		String item = this.ontologyURI+ "#" + "item" + event.getItem();
-		String p1 = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
-		String p2 = this.recommenderTaskOntologyURI + "#" + "doInteraction"; 
-		String p3 = this.recommenderTaskOntologyURI + "#" + "happensWith"; 
-		String p4 = this.recommenderTaskOntologyURI + "#" + "hasRatingValue1-5"; 
+
 
 		kb.addObjectStatement(interaction,  p1, interactionType);
 		kb.addObjectStatement(user,  p2, interaction);
 		kb.addObjectStatement(interaction,  p3, item);
 		kb.addLiteralStatement(interaction,  p4, event.getRatingValue());
+		//if(eventCount%10000==0) System.out.println("OntSize: "+kb.getSize());
 	}
 
 	public void addAnnotation(Item item, String property, String annotationURI) {

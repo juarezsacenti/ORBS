@@ -19,18 +19,10 @@ public class UserFCEngineTest {
 	@Test
 	public void test() {
 		try {
-			EngineParameter eparams = new EngineParameter();
+			EngineParameter eparams = new EngineParameter("src/resources/main/Mov1M/Mov1M-ClassicUCF.json");
 			UserFCEngine engine = new UserFCEngine(eparams);
 			engine.train();
-			DataSource datasource = new DataSource(eparams.getDataSouceParams());
-			TrainingData td = datasource.readTraining();
-			AbstractMap<String, User> users = td.getUsers();
 
-			Query q;
-			for(String str : users.keySet()) {
-				q = new Query(str, 2, null, null, null);
-				engine.query(q);
-			}
 			assertFalse(false);
 		} catch (JsonIOException | JsonSyntaxException e) {
 			// TODO Auto-generated catch block

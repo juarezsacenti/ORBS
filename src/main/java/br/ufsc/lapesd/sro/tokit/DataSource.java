@@ -25,12 +25,12 @@ public class DataSource {
 	        regex = delimiter +"(?=(?:[^']*'[^']*')*[^']*$)";
         } else {
 	        regex = delimiter +"(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
-		}
-        
+		} 
 
         int lineCount = 0;
         String line = "";
         String sourceLocation = dsp.getSourceLocation();
+        long initialTimeSeconds = System.currentTimeMillis() / 1000;
         try (BufferedReader br = new BufferedReader(new FileReader(sourceLocation))) {
         	if(dsp.hasHeaderLine()) {
             	line = br.readLine();
@@ -51,8 +51,16 @@ public class DataSource {
                 	itemsRDD.put(column[1], item);
                 }
                 
+                
+                long timeSeconds;
+                if(dsp.hasEventTimestamp()) {
+                	timeSeconds = Long.parseLong(column[3].trim());
+                } else {
+                	timeSeconds = (System.currentTimeMillis() / 1000) - initialTimeSeconds;
+                }
+                
             	UserItemEvent rating = new UserItemEvent(column[0], column[1], 
-            			System.currentTimeMillis() % 1000, 
+            			timeSeconds, 
             			UserItemEventType.RATING, Float.parseFloat(column[2]));
 				ratingEventsRDD.put(""+lineCount, rating);
 

@@ -15,8 +15,10 @@ public class PredictedResult {
 
     @Override
     public String toString() {
-        return "PredictedResult{" +
-                "itemScores=" + itemScores +
-                '}';
+    	String s = "";
+    	for(ItemScore item : itemScores) {
+    		s += item.getItemEntityId() +"<"+ item.getScore() + ">, ";
+    	}
+        return s;
     }
 }

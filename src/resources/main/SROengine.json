@@ -4,16 +4,15 @@
   "engineFactory": "br.ufsc.lapesd.sro.example.SROEngine",
   "datasource": {
     "params" : {
-      "appName": "MySRO",
-      "sourceLocation": "src/resources/test/sroInput.csv",
+      "sourceLocation": "src/resources/test/rating-trainningSet-25%.csv",
       "enclosure": "\"",
-      "delimiter": ";",
-      "hasHeaderLine": true
+      "delimiter": ",",
+      "hasHeaderLine": false,
+      "hasEventTimestamp": false
     }
   },
   "preparator": {
     "params" : {
-      "appName": "MySRO",
       "contextOntologyParams": {
         "ontologyURI": "http://www.lapesd.inf.ufsc.br/projetos/sro/mysro.owl",
         "ontologyModelSpec": "OWL_DL_MEM",
@@ -23,27 +22,28 @@
         "importedOntologyParams": [
           {
             "ontologyURI": "http://www.movieontology.org/2009/11/09/movieontology.owl",
-  	        "fileLocation": "C:/Users/Juarez Sacenti/git/recommender-sro/recommender-sro/src/resources/main/movieontology.owl",
-  	        "fileFormat": "RDF/XML"
-  	      },
-  	      {
-  	        "ontologyURI": "http://www.lapesd.inf.ufsc.br/ontology/2.0.0/recont.owl",
-  	    	"fileLocation": "C:/Users/Juarez Sacenti/git/recommender-sro/recommender-sro/src/resources/main/recont.owl",
-  	    	"fileFormat": "RDF/XML"
-  	      },
-  	      {
+            "fileLocation": "src/resources/main/importedOntologies/movieontology.owl",
+            "fileFormat": "RDF/XML"
+          },
+          {
+            "ontologyURI": "http://www.lapesd.inf.ufsc.br/ontology/2.0.0/recont.owl",
+            "fileLocation": "src/resources/main/importedOntologies/recont.owl",
+            "fileFormat": "RDF/XML"
+          },
+          {
             "ontologyURI": "http://www.lapesd.inf.ufsc.br/projetos/sro/contextOntology.owl",
-  	        "fileLocation": "src/resources/main/contextOntology.owl",
-  	        "fileFormat": "RDF/XML"
-  	      }
-  	    ]
+            "fileLocation": "src/resources/main/importedOntologies/contextOntology.owl",
+            "fileFormat": "RDF/XML"
+          }
+        ]
    	  },
    	  "annotationSourceParams": {
-        "appName": "MySRO",
-        "sourceLocation": "src/resources/test/movie-annotations.csv",
-        "enclosure": "\"",
-        "delimiter": ";",
-        "hasHeaderLine": true
+        "name": "br.ufsc.lapesd.sro.core.TTLAnnotationSource",
+        "sourceLocation": "src/resources/main/Mov1M/Mov1M-itemGenre.ttl",
+        "enclosure": "",
+        "delimiter": " ",
+        "hasHeaderLine": false,
+        "hasEventTimestamp": false
       },
   	  "semanticExpansionerParams": {
   	    "datasetScope": [ 
@@ -105,13 +105,13 @@
     }
   },
   "algorithm": {
-    "name": "userItemMatrixFC",
+    "name": "br.ufsc.lapesd.sro.example.multiattributefc.MultiAttributeFCAlgorithm",
     "params": {
       "seed": 1,
-      "rank": 10,
+      "neighborhoodSize": 100,
+      "nativeEvaluatorEnabled": false,
       "iteration": 10,
       "lambda": 0.7,
-      "appName": "MySRO",
       "similarItemEvents": ["view"],
       "seenItemEvents": ["view"],
       "unseenOnly": true

@@ -19,6 +19,7 @@ public abstract class Engine {
 
 	public void train() {
 		TrainingData trainingData = datasource.readTraining();
+    	System.out.println("Size:"+ Runtime.getRuntime().totalMemory());
 		PreparedData pd = preparator.prepare(trainingData);
 		pd.toPrint();
 		for(Algorithm algorithm : algorithms) {

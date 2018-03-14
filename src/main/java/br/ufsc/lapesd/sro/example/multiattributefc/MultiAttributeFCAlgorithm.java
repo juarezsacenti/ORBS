@@ -42,42 +42,43 @@ import br.ufsc.lapesd.sro.tokit.Query;
  *  - mais média de avaliações quando houver ponderada pela similaridade da vizinhança com o consultante
  * */
 public class MultiAttributeFCAlgorithm extends Algorithm {
-	private double threshold;
-	private RecommenderBuilder builder;
+	private Recommender recommender;
 	private NearestNUserNeighborhood neighborhood;
 	private PearsonCorrelationSimilarity similarity;
-	public static FileDataModel genreModel;
+	private boolean nativeEvaluatorEnabled;
+	private int neighborhoodSize;
+	public static FileDataModel attributeModel;
 	
 	public MultiAttributeFCAlgorithm(AlgorithmParams algorithmParams) {
-		// TODO Auto-generated constructor stub
-		this.threshold = algorithmParams.getLambda();
+		this.neighborhoodSize = algorithmParams.getNeighborhoodSize();
+		this.nativeEvaluatorEnabled = algorithmParams.isNativeEvaluatorEnabled();
 	}
 
 	@Override
 	public Model train(PreparedData preparedData) {
-		Model model = null;
+    	Model model = null;
 		try {			
 			RandomUtils.useTestSeed(); // to randomize the evaluation result
 			
 			File itemModelFile = ((MultiAttributeFCPreparedData) preparedData).getItemModelFile();
 			File genreModelFile = ((MultiAttributeFCPreparedData) preparedData).getGenreModelFile();
 			DataModel itemModel = new FileDataModel(itemModelFile);
-			genreModel = new FileDataModel(genreModelFile);
-			this.similarity = new PearsonCorrelationSimilarity(genreModel);
-			this.neighborhood = new NearestNUserNeighborhood (100, similarity, genreModel);                
+			attributeModel = new FileDataModel(genreModelFile);
+			this.similarity = new PearsonCorrelationSimilarity(attributeModel);
+			this.neighborhood = new NearestNUserNeighborhood (neighborhoodSize, similarity, attributeModel);                
 
-			this.builder = new RecommenderBuilder() {
+			RecommenderBuilder builder = new RecommenderBuilder() {
 				public Recommender buildRecommender(DataModel model) throws TasteException {
-					UserSimilarity similarity = new PearsonCorrelationSimilarity(genreModel);
-					UserNeighborhood neighborhood = new NearestNUserNeighborhood (100, similarity, genreModel);                
+					UserSimilarity similarity = new PearsonCorrelationSimilarity(attributeModel);
+					UserNeighborhood neighborhood = new NearestNUserNeighborhood (neighborhoodSize, similarity, attributeModel);                
 					return new GenericUserBasedRecommender(model, neighborhood, similarity);                
 	        }
 			};
-		    
-			RecommenderEvaluator evaluator = new RMSRecommenderEvaluator();
-		    double evaluetion_rmse = evaluator.evaluate(builder, null, itemModel, threshold, 1.0);
-		    System.out.println("RMSE: " + evaluetion_rmse);	
-		
+			
+			this.recommender = builder.buildRecommender(itemModel);
+
+			if(nativeEvaluatorEnabled) {nativeEvaluator(builder, itemModel);}
+			
 		    model = new UserFCModel(itemModel);
 		} catch (IOException e) {
     		System.out.println("There was an IO exception.");
@@ -103,32 +104,14 @@ public class MultiAttributeFCAlgorithm extends Algorithm {
 			}
 			UserFCModel ufcModel = (UserFCModel) model;
 			DataModel itemModel = ufcModel.getModel();
-			Recommender recommender = this.builder.buildRecommender(itemModel);
 			
-		    System.out.println("\n\nRecommended items to user <"+userId+">: ");
 			List<RecommendedItem> recommendedItens = this.recommend(itemModel, userId, query.getNumber(), includeKnownItems);
 			for(RecommendedItem item : recommendedItens) {
-		    	System.out.println(item);
 		    	is = new ItemScore(""+item.getItemID(), item.getValue());
 				itemScores.add(is);
 			}
-			
-            long[] theNeighborhood = neighborhood.getUserNeighborhood(userId);
-	        System.out.print("\nUser <"+userId+"> is similar to "+theNeighborhood.length+" users: ");
-		    for(long userSimilares: theNeighborhood){
-		    	System.out.print(userSimilares+", ");
-		    }
 
-			long[] mostSimilarUserIDs = ((GenericUserBasedRecommender) recommender).mostSimilarUserIDs(userId, 3);
-        	for(long recID:mostSimilarUserIDs) {
-                System.out.println("\nThe similarity between user <"+userId+"> and <"+recID+"> is: "+similarity.userSimilarity(userId, recID));
-                FastIDSet itemsFromUser = itemModel.getItemIDsFromUser(recID);
-                System.out.println("User <"+recID+"> has interactions with "+ itemsFromUser.size() +" items: ");
-            	for(long item:itemsFromUser) {
-            		System.out.print(" "+item);
-            	}
-            }
-    		System.out.println();
+			analyse(userId, itemModel, 3);
 			
 			result = new PredictedResult(itemScores);
 		} catch (Exception e) {
@@ -138,6 +121,65 @@ public class MultiAttributeFCAlgorithm extends Algorithm {
 		return result;
 	}
 
+	private void nativeEvaluator(RecommenderBuilder builder, DataModel model) throws TasteException {    
+		RecommenderEvaluator evaluator = new RMSRecommenderEvaluator();
+	    double evaluetion_rmse = evaluator.evaluate(builder, null, model, 0.7, 1.0);
+	    System.out.println("RMSE: " +evaluetion_rmse+"\n");	
+	}
+	
+	private void analyse(long userId, DataModel model, int closestNeighborhoodSize) throws TasteException {    
+        System.out.println("#### ANALYSING USER <"+userId+"> ####");
+
+        // Attributes of userId's items
+        FastIDSet attributesFromUser = attributeModel.getItemIDsFromUser(userId);
+        System.out.println("|| has items with attribute<percent>:");
+		System.out.print("...");
+		for(long attrId : attributesFromUser) {
+    		System.out.print(" "+attrId+"<"+attributeModel.getPreferenceValue(userId, attrId)+">,");
+    	}
+		System.out.println();
+        
+        // Items from userId's interactions
+        FastIDSet itemsFromUser = model.getItemIDsFromUser(userId);
+        System.out.println("|| has interactions with "+itemsFromUser.size()+" 'items<rating>':");
+		System.out.print("...");
+		//for(long itemId : itemsFromUser) {
+    	//	System.out.print(" "+itemId+"<"+model.getPreferenceValue(userId, itemId)+">,");
+    	//}
+		System.out.println();
+		
+        // Neighborhood of userId
+        long[] theNeighborhood = neighborhood.getUserNeighborhood(userId);
+        System.out.println("|| is similar to "+theNeighborhood.length+" users:");
+		System.out.print("...");
+		//for(long userSimilares: theNeighborhood){
+	    //	System.out.print(" "+userSimilares+",");
+	    //}
+		System.out.println();			
+
+	    // Items from userId's closest neighborhood
+		long[] mostSimilarUserIds = ((GenericUserBasedRecommender) recommender).mostSimilarUserIDs(userId, closestNeighborhoodSize);
+    	for(long simUserId : mostSimilarUserIds) {
+            System.out.println("|| similarity degree with "+simUserId+": "+similarity.userSimilarity(userId, simUserId));
+            itemsFromUser = model.getItemIDsFromUser(simUserId);
+            System.out.println("... User <"+simUserId+"> has interactions with "+ itemsFromUser.size() +" items: ");
+    		//System.out.print("...");
+    		//for(long itemId : itemsFromUser) {
+        	//	System.out.print(" "+itemId+"<"+model.getPreferenceValue(simUserId, itemId)+">,");
+        	//}
+    		//System.out.println();
+
+    		attributesFromUser = attributeModel.getItemIDsFromUser(simUserId);
+            System.out.println("|| has items with attribute<percent>:");
+    		System.out.print("...");
+    		for(long attrId : attributesFromUser) {
+        		System.out.print(" "+attrId+"<"+attributeModel.getPreferenceValue(simUserId, attrId)+">,");
+        	}
+    		System.out.println();
+    	}
+		System.out.println();			
+	}
+	
 	private List<RecommendedItem> recommend(DataModel dataModel, long userID, int howMany, boolean includeKnownItems) 
 	throws TasteException {
 	    Preconditions.checkArgument(howMany >= 1, "howMany must be at least 1");

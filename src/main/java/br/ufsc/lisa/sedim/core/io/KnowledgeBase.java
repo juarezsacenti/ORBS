@@ -1,6 +1,8 @@
 package br.ufsc.lisa.sedim.core.io;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.jena.ontology.OntDocumentManager;
@@ -76,7 +78,7 @@ public class KnowledgeBase {
 		OntDocumentManager dm = this.ontologyModel.getDocumentManager();
 		dm.addAltEntry( ontologyURI, "file:" + ontologyLocation );
 		Ontology ont = this.ontologyModel.getOntology(ontologyName);
-		ont.addImport( this.ontologyModel.createResource(ontologyURI));		
+		ont.addImport( this.ontologyModel.createResource(ontologyURI));
 	}
 
 	public void addObjectStatement(String subject, String property, String object) {
@@ -126,4 +128,32 @@ public class KnowledgeBase {
 			
 		return triples;
 	}
+
+	public HashSet<String> getAncestors(String hierarchyProperty, String otherFather) {
+		HashSet<String> ancestors = new HashSet<String>();
+		String ancestor;
+		
+        Iterator<RDFTriple> ancestorsIt = getStatements(otherFather, hierarchyProperty, null).iterator();
+        while(ancestorsIt.hasNext()) {
+        	ancestor = ancestorsIt.next().getObject();
+    		if(!ancestors.contains(ancestor)) {
+    			ancestors.add(ancestor);
+    			ancestors.addAll(getAncestors(hierarchyProperty, ancestor));
+    		}
+        }
+		return ancestors;
+	}
+	
+	public long getSize() {
+		return ontologyModel.size();
+	}
+
+	public void removeStatement(RDFTriple triple) {
+		Resource s = this.ontologyModel.getResource(triple.getSubject());
+		Property p = this.ontologyModel.getProperty(triple.getPredicate());
+		Resource o = this.ontologyModel.getResource(triple.getObject());
+		this.ontologyModel.remove(s, p, o);
+	}
+	
+	
 }

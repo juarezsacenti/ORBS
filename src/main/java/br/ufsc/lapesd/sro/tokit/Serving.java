@@ -9,9 +9,11 @@ public class Serving {
 		
 		if(predictions.size() > 0) {
 			finalAnwser = predictions.get(0); // head or first
-			System.out.println("User " + q.getUserEntityId() + " should see also: "+ finalAnwser.toString());
+			System.out.println("User " + q.getUserEntityId() + " should see also "+q.getNumber()+" item<estimated rating>:");
+			System.out.println(finalAnwser.toString());
 		} else {
 			System.out.println("User " + q.getUserEntityId() + " has no predictions.");
+			System.out.println();
 		}
 		
 		return finalAnwser; 

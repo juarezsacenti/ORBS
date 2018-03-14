@@ -4,101 +4,26 @@
   "engineFactory": "br.ufsc.lapesd.sro.example.SROEngine",
   "datasource": {
     "params" : {
-      "appName": "MySRO",
       "sourceLocation": "src/resources/test/rating-trainningSet-5%.csv",
       "enclosure": "\"",
       "delimiter": ",",
-      "hasHeaderLine": false
+      "hasHeaderLine": false,
+      "hasEventTimestamp": false
     }
   },
   "preparator": {
     "params" : {
-      "appName": "MySRO",
-      "contextOntologyParams": {
-		"ontologyURI": "http://www.lapesd.inf.ufsc.br/projetos/sro/mysro.owl",
-		"ontologyModelSpec": "OWL_DL_MEM",
-  		"tripleStore": "Text",
-  		"tripleStoreDirectory": "C:/Users/Juarez Sacenti/Desktop/",
-		"repositoryName": "mysro.owl",
-  	    "contextOntologyURI": "http://www.lapesd.inf.ufsc.br/projetos/sro/contextOntology.owl",
-  	    "contextOntologyLocation": "src/resources/main/contextOntology.owl",
-  	    "contextOntologyFormat": "RDF/XML"
-   	  },
-   	  "annotationSourceParams": {
-        "appName": "MySRO",
-        "sourceLocation": "src/resources/test/movie-annotations.csv",
-        "enclosure": "\"",
-        "delimiter": ";",
-        "hasHeaderLine": true
-      },
-  	  "semanticExpansionerParams": {
-  	    "datasetScope": [ 
-  	    	{
-  	     		"datasetScopeName": "dbpedia.org",
-  	    		"datasetScopeEndpoint": "http://dbpedia.org/sparql",
-  	    		"datasetScopeProperties": [ 
-  	    		  {
-  	    		  	"property": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-  	    		  	"isTransitive": false
-  	    		  },
-  	    		  {
-  	    		  	"property": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
-  	    		  	"isTransitive": true
-  	    		  }
-  	    		]
-  	    	}
-  	    ]
-  	  },
-  	  "hierarchyBuilderParams": {
-  	    "hierarchiesParams": [ 
-  	    	{ 
-  	    	  "hierarchyProperty": "http://www.lisa.inf.ufsc.br/sedim-ontology#genreHierarchy",
-  	    	  "mappingProperties": [
-  	    	  	{
-  	    	  	  "property": "http://www.movieontology.org/2009/10/01/movieontology.owl#belongsToGenre",
-  	    		  "isTransitive": false
-  	    		},
-  	    	  	{
-  	    	  	  "property": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-  	    		  "isTransitive": false
-  	    		},
-  	    	  	{
-  	    	  	  "property": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
-  	    		  "isTransitive": true
-  	    		}
-  	    	  ]
-  	    	}
-  	    ],
-  	    "countersParams": [
-  	        {
-  	          "counterType": "userCounter",
-  	          "userType": "http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Audience",
-  	          "userProperty": "http://www.lapesd.inf.ufsc.br/ontology/recont.owl#doInteraction",
-  	          "countedProperty": "http://www.lapesd.inf.ufsc.br/ontology/recont.owl#happensWith",
-	          "hierarchyProperty": "http://www.lisa.inf.ufsc.br/sedim-ontology#genreHierarchy",
-	          "directHitProperty": "http://www.lisa.inf.ufsc.br/sedim-ontology#directHitsOfAudience",
-	          "indirectHitProperty": "http://www.lisa.inf.ufsc.br/sedim-ontology#indirectHitsOfAudience"	          
-  	        }
-  	    ]
-	  },
-	  "hierarchyTailorParams": {
-  	    "threshold": 20
-      },
-	  "hitAggregatorParams": {
-  	    "hitType": "indirect",
-  	    "aggregationType": "mean"
-      }
     }
   },
   "algorithm":
     {
       "name": "userItemMatrixFC",
       "params": {
+        "neighborhoodSize": 100,
+        "nativeEvaluatorEnabled": true,
         "seed": 1,
-        "rank": 10,
         "iteration": 10,
         "lambda": 0.7,
-        "appName": "MySRO",
         "similarItemEvents": ["view"],
         "seenItemEvents": ["view"],
         "unseenOnly": true

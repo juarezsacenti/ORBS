@@ -27,10 +27,13 @@ public class TextAccess extends TripleStoreAccess {
 		if(!hasSavedRepositoryInFile(repositoryName)) {createRepository(repositoryName);}
 		
 //		ontologyModel.commit();
+        System.out.println("BEGIN: Ont --> File");
 
         fw = new FileWriter(this.fileDirectory + repositoryName);
         ontologyModel.write(fw, rdfFormat);
-		
+
+        System.out.println("END: Ont --> File");
+	
 //		ontologyModel.begin();
 	}
 	

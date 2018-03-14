@@ -7,17 +7,17 @@ public class AlgorithmParams {
 	    private final int rank;
 	    private final int iteration;
 	    private final double lambda;
-	    private final String appName;
 	    private final List<String> similarItemEvents;
 	    private final boolean unseenOnly;
 	    private final List<String> seenItemEvents;
+		private boolean nativeEvaluatorEnabled;
+		private int neighborhoodSize;
 
-	    public AlgorithmParams(long seed, int rank, int iteration, double lambda, String appName, List<String> similarItemEvents, boolean unseenOnly, List<String> seenItemEvents) {
+	    public AlgorithmParams(long seed, int rank, int iteration, double lambda, List<String> similarItemEvents, boolean unseenOnly, List<String> seenItemEvents) {
 	        this.seed = seed;
 	        this.rank = rank;
 	        this.iteration = iteration;
 	        this.lambda = lambda;
-	        this.appName = appName;
 	        this.similarItemEvents = similarItemEvents;
 	        this.unseenOnly = unseenOnly;
 	        this.seenItemEvents = seenItemEvents;
@@ -39,10 +39,6 @@ public class AlgorithmParams {
 	        return lambda;
 	    }
 
-	    public String getAppName() {
-	        return appName;
-	    }
-
 	    public List<String> getSimilarItemEvents() {
 	        return similarItemEvents;
 	    }
@@ -62,10 +58,17 @@ public class AlgorithmParams {
 	                ", rank=" + rank +
 	                ", iteration=" + iteration +
 	                ", lambda=" + lambda +
-	                ", appName='" + appName + '\'' +
 	                ", similarItemEvents=" + similarItemEvents +
 	                ", unseenOnly=" + unseenOnly +
 	                ", seenItemEvents=" + seenItemEvents +
 	                '}';
 	    }
+
+		public boolean isNativeEvaluatorEnabled() {
+			return nativeEvaluatorEnabled;
+		}
+
+		public int getNeighborhoodSize() {
+			return neighborhoodSize;
+		}
 	}

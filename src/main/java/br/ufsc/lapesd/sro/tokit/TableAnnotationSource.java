@@ -6,15 +6,17 @@ import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.HashMap;
 
-public class AnnotationSource {
+import br.ufsc.lapesd.sro.core.AnnotationSource;
+
+public class TableAnnotationSource implements AnnotationSource {
 	
 	private final DataSourceParams dsp;
 	
-	public AnnotationSource(DataSourceParams dsp) {
+	public TableAnnotationSource(DataSourceParams dsp) {
 		this.dsp = dsp;
 	}
 	
-    public AbstractMap<String, ItemResourceAnnotations> readAnnotations() {
+    public AbstractMap<String, ItemResourceAnnotations> getAnnotations() {
 		AbstractMap<String, ItemResourceAnnotations> itemAnnotationsRDD = new HashMap<String,ItemResourceAnnotations>();
 
         String regex;
@@ -29,7 +31,7 @@ public class AnnotationSource {
         String sourceLocation = dsp.getSourceLocation();
         try (BufferedReader br = new BufferedReader(new FileReader(sourceLocation))) {
         	if(!dsp.hasHeaderLine()) {
-        		throw new Exception("AnnotationSource file without header.");
+        		throw new Exception("TableAnnotationSource file without header.");
             } else {
             	line = br.readLine();
            		String[] column = line.split(regex, -1);             

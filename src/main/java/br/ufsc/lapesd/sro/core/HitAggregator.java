@@ -21,7 +21,7 @@ public class HitAggregator {
 		HashMap<String, HashMap<String, Integer>> counterHits;
 		HashMap<String, Integer> attributeSet;
 		String user, key;
-		float value, total;
+		float value, directHitsTotal;
 		
 		for(Counter counter : counters) {			
 			switch(hitType) {
@@ -56,14 +56,11 @@ public class HitAggregator {
 					userAttributes = ha.get(user);
 					attributeSet = entry1.getValue();
 					
-					total = 0;
-					for(Entry<String,Integer> entry2 : attributeSet.entrySet()) {
-						total += entry2.getValue();
-					}
+					directHitsTotal = counter.getDirectHits().get(user).size();
 					
 					for(Entry<String,Integer> entry2 : attributeSet.entrySet()) {
 						key = entry2.getKey();
-						value = userAttributes.getOrDefault(key, (float) 0) + ( ((float) entry2.getValue()) / total);
+						value = userAttributes.getOrDefault(key, (float) 0) + ( ((float) entry2.getValue()) / directHitsTotal);
 						userAttributes.put(key, value);
 					}	
 				}
@@ -83,7 +80,6 @@ public class HitAggregator {
 				return ha;
 			}
 		}
-		
 		return ha;
 	}
 
