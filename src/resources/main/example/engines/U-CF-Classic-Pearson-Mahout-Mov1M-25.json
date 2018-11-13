@@ -1,0 +1,31 @@
+{
+  "id": "0",
+  "description": "User based - Colaborative Filtering - Classic profile model - Pearson similarity - Mahout framework - Mov1M dataset - 25% sparsity level - engine settings.",
+  "engine": "br.ufsc.lapesd.orbs.example.ucfclassic.UCFClassicEngine",
+  "datasource": {
+    "params" : {
+      "sourceLocation": "src/resources/main/example/datasets/Mov1M/Mov1M-25.csv",
+      "enclosure": "\"",
+      "delimiter": ",",
+      "hasHeaderLine": false,
+      "hasEventTimestamp": false
+    }
+  },
+  "preparator": {
+    "params" : {}
+  },
+  "algorithm":
+    {
+      "name": "userItemMatrixFC",
+      "params": {
+        "neighborhoodSize": 100,
+        "nativeEvaluatorEnabled": false,
+        "lambda": 0.7,
+        "seed": 1,
+        "iteration": 10,
+        "similarItemEvents": ["view"],
+        "seenItemEvents": ["view"],
+        "unseenOnly": true
+      }
+    }
+}

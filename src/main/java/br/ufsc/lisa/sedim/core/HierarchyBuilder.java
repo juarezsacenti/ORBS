@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import br.ufsc.lapesd.sro.tokit.UserItemEvent;
+import br.ufsc.lapesd.orbs.tokit.UserItemEvent;
 import br.ufsc.lisa.sedim.core.io.KnowledgeBase;
 import br.ufsc.lisa.sedim.core.io.RDFTriple;
 
@@ -51,9 +51,6 @@ public class HierarchyBuilder {
 			kb.addObjectStatement(hierarchyProperty, 
 					"http://www.w3.org/2000/01/rdf-schema#subPropertyOf", 
 					"http://www.w3.org/2002/07/owl#topObjectProperty");
-			kb.addObjectStatement(hierarchyProperty, 
-					"http://www.w3.org/2000/01/rdf-schema#subPropertyOf", 
-					"http://www.lapesd.inf.ufsc.br/ontology/recont.owl#hasObjectFI");
 			mapPropertiesToHierarchy(hierarchyProperty, hp.getMappingProperties());
 			printHierarchy(hierarchyProperty,"genre1");
 			removeAnticipatedAssociations(hierarchyProperty);

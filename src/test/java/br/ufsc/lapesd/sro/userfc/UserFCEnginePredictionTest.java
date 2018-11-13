@@ -7,12 +7,12 @@ import java.util.AbstractMap;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
-import br.ufsc.lapesd.sro.example.userfc.UserFCEngine;
-import br.ufsc.lapesd.sro.tokit.DataSource;
-import br.ufsc.lapesd.sro.tokit.EngineParameter;
-import br.ufsc.lapesd.sro.tokit.Query;
-import br.ufsc.lapesd.sro.tokit.TrainingData;
-import br.ufsc.lapesd.sro.tokit.User;
+import br.ufsc.lapesd.orbs.example.ucfclassic.UCFClassicEngine;
+import br.ufsc.lapesd.orbs.tokit.DataSource;
+import br.ufsc.lapesd.orbs.tokit.EngineParameter;
+import br.ufsc.lapesd.orbs.tokit.Query;
+import br.ufsc.lapesd.orbs.tokit.TrainingData;
+import br.ufsc.lapesd.orbs.tokit.User;
 
 public class UserFCEnginePredictionTest {
 
@@ -21,8 +21,8 @@ public class UserFCEnginePredictionTest {
 		try {
 			System.out.println("#######################################################################");
 			System.out.println("Training Engine");
-			EngineParameter eparams = new EngineParameter("src/resources/main/Mov1M/Mov1M-ClassicUCF.json");
-			UserFCEngine engine = new UserFCEngine(eparams);
+			EngineParameter eparams = new EngineParameter("src/resources/main/example/engines/U-CF-Classic-Pearson-Mahout-Mov1M-25.json");
+			UCFClassicEngine engine = new UCFClassicEngine(eparams);
 			engine.train();
 			
 			System.out.println("#######################################################################");

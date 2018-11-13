@@ -37,15 +37,6 @@
     <owl:ObjectProperty rdf:about="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#hasObjectFI"/>
     
 
-
-    <!-- http://www.lapesd.inf.ufsc.br/projetos/sro/mysro.owl#genreHierarchy -->
-
-    <owl:ObjectProperty rdf:about="http://www.lapesd.inf.ufsc.br/projetos/sro/mysro.owl#genreHierarchy">
-        <rdfs:subPropertyOf rdf:resource="http://www.lapesd.inf.ufsc.br/ontology/recont.owl#hasObjectFI"/>
-    </owl:ObjectProperty>
-    
-
-
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //

@@ -7,12 +7,12 @@ import java.util.AbstractMap;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
-import br.ufsc.lapesd.sro.example.userfc.UserFCEngine;
-import br.ufsc.lapesd.sro.tokit.DataSource;
-import br.ufsc.lapesd.sro.tokit.EngineParameter;
-import br.ufsc.lapesd.sro.tokit.Query;
-import br.ufsc.lapesd.sro.tokit.TrainingData;
-import br.ufsc.lapesd.sro.tokit.User;
+import br.ufsc.lapesd.orbs.example.ucfclassic.UCFClassicEngine;
+import br.ufsc.lapesd.orbs.tokit.DataSource;
+import br.ufsc.lapesd.orbs.tokit.EngineParameter;
+import br.ufsc.lapesd.orbs.tokit.Query;
+import br.ufsc.lapesd.orbs.tokit.TrainingData;
+import br.ufsc.lapesd.orbs.tokit.User;
 
 public class UserFCEngineTest {
 
@@ -20,7 +20,7 @@ public class UserFCEngineTest {
 	public void test() {
 		try {
 			EngineParameter eparams = new EngineParameter("src/resources/main/Mov1M/Mov1M-ClassicUCF.json");
-			UserFCEngine engine = new UserFCEngine(eparams);
+			UCFClassicEngine engine = new UCFClassicEngine(eparams);
 			engine.train();
 
 			assertFalse(false);

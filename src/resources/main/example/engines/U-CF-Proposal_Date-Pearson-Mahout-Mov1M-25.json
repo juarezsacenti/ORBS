@@ -1,0 +1,95 @@
+{
+  "id": "40003",
+  "description": "User based - Colaborative Filtering - Proposal profile model with genre and release date hierarchy - Pearson similarity - Mahout framework - Mov1M dataset - 100% sparsity level - engine settings.",
+  "engine": "br.ufsc.lapesd.orbs.core.ProposalEngine",
+  "datasource": {
+    "params" : {
+      "sourceLocation": "src/resources/main/example/datasets/Mov1M/Mov1M-25.csv",
+      "enclosure": "\"",
+      "delimiter": ",",
+      "hasHeaderLine": false,
+      "hasEventTimestamp": false
+    }
+  },
+  "preparator": {
+    "params" : {
+      "contextOntologyParams": {
+        "ontologyURI": "http://www.lapesd.inf.ufsc.br/projetos/sro/mov1m-sro.owl",
+        "ontologyModelSpec": "OWL_DL_MEM",
+  	    "tripleStore": "Text",
+        "tripleStoreDirectory": "C:/Users/Juarez Sacenti/Desktop/",
+        "repositoryName": "mov1m-sro.owl",
+        "importedOntologyParams": [
+          {
+            "ontologyURI": "http://www.movieontology.org/2009/11/09/movieontology.owl",
+            "fileLocation": "src/resources/main/importedOntologies/movieontology.owl",
+            "fileFormat": "RDF/XML"
+          },
+          {
+            "ontologyURI": "http://www.lapesd.inf.ufsc.br/ontology/2.0.0/recont.owl",
+            "fileLocation": "src/resources/main/importedOntologies/recont.owl",
+            "fileFormat": "RDF/XML"
+          },
+          {
+            "ontologyURI": "http://www.lapesd.inf.ufsc.br/projetos/sro/contextOntology.owl",
+            "fileLocation": "src/resources/main/importedOntologies/contextOntology.owl",
+            "fileFormat": "RDF/XML"
+          }
+        ]
+   	  },
+   	  "annotationSources": [ 
+          {
+            "name": "br.ufsc.lapesd.orbs.core.TTLAnnotationSource",
+            "sourceLocation": "src/resources/main/example/datasets/Mov1M/Mov1M-itemReleaseDate.ttl",
+            "enclosure": "",
+            "delimiter": " ",
+            "hasHeaderLine": false,
+            "hasEventTimestamp": false
+          }
+      ],
+      "propertiesOfInterest": [ 
+          "http://www.lapesd.inf.ufsc.br/projetos/sro/mov1m-sro.owl#releaseDateHierarchy"           
+      ],
+  	  "semanticExpansionerParams": {
+  	    "datasetScope": [ 
+  	    ]
+  	  },
+  	  "hierarchyBuilderParams": {
+  	    "hierarchiesParams": [ 
+  	    ],
+  	    "countersParams": [
+          {
+            "counterType": "userCounter",
+            "userType": "http://www.lapesd.inf.ufsc.br/ontology/recont.owl#Audience",
+            "userProperty": "http://www.lapesd.inf.ufsc.br/ontology/recont.owl#doInteraction",
+            "countedProperty": "http://www.lapesd.inf.ufsc.br/ontology/recont.owl#happensWith",
+            "hierarchyProperty": "http://www.lapesd.inf.ufsc.br/projetos/sro/mov1m-sro.owl#releaseDateHierarchy",
+            "directHitProperty": "http://www.lisa.inf.ufsc.br/sedim-ontology#directHitsOfAudience",
+            "indirectHitProperty": "http://www.lisa.inf.ufsc.br/sedim-ontology#indirectHitsOfAudience"            
+          }
+  	    ]
+	  },
+	  "hierarchyTailorParams": {
+  	    "threshold": 20
+      },
+	  "hitAggregatorParams": {
+  	    "hitType": "indirect",
+  	    "aggregationType": "mean"
+      },
+      "FoIMatrixType": "SingleFoIMatrix"
+    }
+  },
+  "algorithm": {
+    "name": "br.ufsc.lapesd.orbs.example.ucfmultiattribute.UCFMultiAttributeAlgorithm",
+    "params": {
+      "seed": 1,
+      "neighborhoodSize": 100,
+      "nativeEvaluatorEnabled": false,
+      "iteration": 10,
+      "lambda": 0.7,
+      "similarItemEvents": ["view"],
+      "seenItemEvents": ["view"],
+      "unseenOnly": true
+    }
+  }
+}

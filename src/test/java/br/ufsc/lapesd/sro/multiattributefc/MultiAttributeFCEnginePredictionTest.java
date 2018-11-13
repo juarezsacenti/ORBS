@@ -9,12 +9,12 @@ import org.junit.Test;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
-import br.ufsc.lapesd.sro.example.multiattributefc.MultiAttributeFCEngine;
-import br.ufsc.lapesd.sro.tokit.DataSource;
-import br.ufsc.lapesd.sro.tokit.EngineParameter;
-import br.ufsc.lapesd.sro.tokit.Query;
-import br.ufsc.lapesd.sro.tokit.TrainingData;
-import br.ufsc.lapesd.sro.tokit.User;
+import br.ufsc.lapesd.orbs.example.ucfmultiattribute.UCFMultiAttributeEngine;
+import br.ufsc.lapesd.orbs.tokit.DataSource;
+import br.ufsc.lapesd.orbs.tokit.EngineParameter;
+import br.ufsc.lapesd.orbs.tokit.Query;
+import br.ufsc.lapesd.orbs.tokit.TrainingData;
+import br.ufsc.lapesd.orbs.tokit.User;
 
 public class MultiAttributeFCEnginePredictionTest {
 
@@ -23,8 +23,8 @@ public class MultiAttributeFCEnginePredictionTest {
 		try {
 			System.out.println("#######################################################################");
 			System.out.println("Training Engine");	
-			EngineParameter eparams = new EngineParameter("src/resources/main/Mov1M/Mov1M-MultiAttributeUCF.json");
-			MultiAttributeFCEngine engine = new MultiAttributeFCEngine(eparams);
+			EngineParameter eparams = new EngineParameter("src/resources/main/example/engines/U-CF-Multiattribute_Genre-Pearson-Mahout-Mov1M-100.json");
+			UCFMultiAttributeEngine engine = new UCFMultiAttributeEngine(eparams);
 			engine.train();
 			
 			System.out.println("#######################################################################");
@@ -39,7 +39,7 @@ public class MultiAttributeFCEnginePredictionTest {
 				engine.query(q);
 			}
 			*/
-			engine.query(new Query("2116", 10, null, null, null));
+			engine.query(new Query("4169", 10, null, null, null));
 /*			engine.query(new Query("2223", 10, null, null, null));
 			engine.query(new Query("2077", 10, null, null, null));
 			engine.query(new Query("699", 10, null, null, null));

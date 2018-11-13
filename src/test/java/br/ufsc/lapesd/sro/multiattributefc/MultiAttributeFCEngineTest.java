@@ -7,8 +7,8 @@ import org.junit.Test;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
-import br.ufsc.lapesd.sro.example.multiattributefc.MultiAttributeFCEngine;
-import br.ufsc.lapesd.sro.tokit.EngineParameter;
+import br.ufsc.lapesd.orbs.example.ucfmultiattribute.UCFMultiAttributeEngine;
+import br.ufsc.lapesd.orbs.tokit.EngineParameter;
 
 public class MultiAttributeFCEngineTest {
 
@@ -16,7 +16,7 @@ public class MultiAttributeFCEngineTest {
 	public void test() {
 		try {
 			EngineParameter eparams = new EngineParameter("src/resources/main/Mov1M/Mov1M-MultiAttributeUCF.json");
-			MultiAttributeFCEngine engine = new MultiAttributeFCEngine(eparams);
+			UCFMultiAttributeEngine engine = new UCFMultiAttributeEngine(eparams);
 			engine.train();
 
 			assertFalse(false);
