@@ -19,7 +19,7 @@ public class UserFCEnginePredictionTest {
 	@Test
 	public void test() {
 		try {
-			System.out.println("#######################################################################");
+/*			System.out.println("#######################################################################");
 			System.out.println("Training Engine");
 			EngineParameter eparams = new EngineParameter("src/resources/main/example/engines/U-CF-Classic-Pearson-Mahout-Mov1M-25.json");
 			UCFClassicEngine engine = new UCFClassicEngine(eparams);
@@ -27,7 +27,7 @@ public class UserFCEnginePredictionTest {
 			
 			System.out.println("#######################################################################");
 			System.out.println("Quering Engine");
-/*          DataSource datasource = new DataSource(eparams.getDataSouceParams());
+            DataSourceSplitter datasource = new DataSourceSplitter(eparams.getDataSouceParams());
 			TrainingData td = datasource.readTraining();
 			AbstractMap<String, User> users = td.getUsers();
 
@@ -36,9 +36,9 @@ public class UserFCEnginePredictionTest {
 				q = new Query(str, 10, null, null, null);
 				engine.query(q);
 			}
-*/
+
 			engine.query(new Query("2116", 10, null, null, null));
-/*			engine.query(new Query("271", 10, null, null, null));
+			engine.query(new Query("271", 10, null, null, null));
 			engine.query(new Query("637", 10, null, null, null));
 			
 			System.out.println("\n###################  INTERACTS WITH 16 ITEM:  ###################");

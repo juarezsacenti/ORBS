@@ -10,7 +10,6 @@ import org.apache.mahout.cf.taste.eval.RecommenderBuilder;
 import org.apache.mahout.cf.taste.eval.RecommenderEvaluator;
 import org.apache.mahout.cf.taste.impl.common.FastIDSet;
 import org.apache.mahout.cf.taste.impl.eval.AverageAbsoluteDifferenceRecommenderEvaluator;
-import org.apache.mahout.cf.taste.impl.eval.RMSRecommenderEvaluator;
 import org.apache.mahout.cf.taste.impl.model.file.FileDataModel;
 import org.apache.mahout.cf.taste.impl.neighborhood.NearestNUserNeighborhood;
 import org.apache.mahout.cf.taste.impl.recommender.GenericUserBasedRecommender;
@@ -36,10 +35,12 @@ public class UCFClassicAlgorithm extends Algorithm {
 	private Recommender recommender;
 	private NearestNUserNeighborhood neighborhood;
 	private PearsonCorrelationSimilarity similarity;
+	private boolean useTestSeed;
 	private int neighborhoodSize;
 	private boolean nativeEvaluatorEnabled;
 
 	public UCFClassicAlgorithm(AlgorithmParams algorithmParams) {
+		this.useTestSeed = algorithmParams.useTestSeed();
 		this.neighborhoodSize = algorithmParams.getNeighborhoodSize();
 		this.nativeEvaluatorEnabled = algorithmParams.isNativeEvaluatorEnabled();
 	}
@@ -47,8 +48,8 @@ public class UCFClassicAlgorithm extends Algorithm {
 	@Override
 	public Model train(PreparedData preparedData) {
 		Model model = null;
-		try {			
-			RandomUtils.useTestSeed(); // to randomize the evaluation result
+		try {
+			if(this.useTestSeed) { RandomUtils.useTestSeed(); } // do not randomize the evaluation result
 			
 			File file = ((UCFClassicPreparedData) preparedData).getFile();
 			this.mahoutModel = new FileDataModel(file);
@@ -58,7 +59,7 @@ public class UCFClassicAlgorithm extends Algorithm {
 			this.builder = new RecommenderBuilder() {
 				public Recommender buildRecommender(DataModel model) throws TasteException {
 					UserSimilarity similarity = new PearsonCorrelationSimilarity(model);
-					UserNeighborhood neighborhood = new NearestNUserNeighborhood (neighborhoodSize, -10.d, similarity, model);       
+					UserNeighborhood neighborhood = new NearestNUserNeighborhood(neighborhoodSize, -10.d, similarity, model);       
 					return new GenericUserBasedRecommender(model, neighborhood, similarity);                
 				}
 			};
@@ -98,10 +99,11 @@ public class UCFClassicAlgorithm extends Algorithm {
 				itemScores.add(is);
 			}
 	        
-			analyse(userId, itemModel, 3);
+			//analyse(userId, itemModel, 3);
 
     		result = new PredictedResult(itemScores);
 		} catch (Exception e) { e.printStackTrace(); }
+		
 		return result;
 	}
 	

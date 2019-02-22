@@ -30,7 +30,7 @@ public class TTLAnnotationSource implements AnnotationSource {
 			}
 	        
 	        String line = "";
-	        String sourceLocation = dsp.getSourceLocation();
+	        String sourceLocation = dsp.getSourceLocation().get(0);
 	        try (BufferedReader br = new BufferedReader(new FileReader(sourceLocation))) {
            		String[] column;
            		String s, p, o;

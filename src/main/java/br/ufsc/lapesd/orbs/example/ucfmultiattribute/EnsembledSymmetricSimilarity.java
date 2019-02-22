@@ -118,11 +118,15 @@ public class EnsembledSymmetricSimilarity implements UserSimilarity {
 	}
 
 	public void save() {
+		save("src/resources/main/temp/sim_ensembledSymSim.csv");
+	}
+	
+	public void save(String path) {
 		long userID1, userID2;
 		double sim;
 		
 		try {
-			OutputStream os = new FileOutputStream("src/resources/main/temp/sim_ensembledSymSim.csv");
+			OutputStream os = new FileOutputStream(path);
 			Writer writer = new OutputStreamWriter(os, "UTF-8");
 			writer.write(numUsers+"\n");
 		
@@ -142,6 +146,8 @@ public class EnsembledSymmetricSimilarity implements UserSimilarity {
 			e.printStackTrace();
 		}
 	}
+	
+	
 	
 	public static <T, E> T getKeyByValue(Map<T, E> map, E value) {
 	    for (Entry<T, E> entry : map.entrySet()) {

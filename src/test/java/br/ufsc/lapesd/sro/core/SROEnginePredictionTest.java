@@ -19,16 +19,16 @@ public class SROEnginePredictionTest {
 	@Test
 	public void test() {
 		try {
-			System.out.println("#######################################################################");
+/*			System.out.println("#######################################################################");
 			System.out.println("Training Engine");
-			EngineParameter eparams = new EngineParameter("src/resources/main/Mov1M/Mov1M-SRO2hierarchies.json");
+			EngineParameter eparams = new EngineParameter("src/resources/main/example/engines/U-CF-Proposal_GenreDate-Pearson-Mahout-Mov1M-100.json");
 			//EngineParameter eparams = new EngineParameter("src/resources/main/SROengine.json");
 			UCFProposalEngine engine = new UCFProposalEngine(eparams);
 			engine.train();
 
 			System.out.println("#######################################################################");
 			System.out.println("Quering Engine");
-/*			DataSource datasource = new DataSource(eparams.getDataSouceParams());
+			DataSourceSplitter datasource = new DataSourceSplitter(eparams.getDataSouceParams());
 			TrainingData td = datasource.readTraining();
 			AbstractMap<String, User> users = td.getUsers();
 
@@ -37,9 +37,9 @@ public class SROEnginePredictionTest {
 				q = new Query(str, 10, null, null, null);
 				engine.query(q);
 			}
-*/
+
 			engine.query(new Query("2116", 10, null, null, null));
-/*			engine.query(new Query("549", 10, null, null, null));
+			engine.query(new Query("549", 10, null, null, null));
 			engine.query(new Query("1861", 10, null, null, null));
 			engine.query(new Query("3272", 10, null, null, null));
 

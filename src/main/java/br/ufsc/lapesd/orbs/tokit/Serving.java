@@ -18,5 +18,4 @@ public class Serving {
 		
 		return finalAnwser; 
 	}
-
 }

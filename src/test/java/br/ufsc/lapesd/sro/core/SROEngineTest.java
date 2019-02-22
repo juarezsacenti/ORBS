@@ -15,11 +15,11 @@ public class SROEngineTest {
 	@Test
 	public void test() {
 		try {
-	    	System.out.println("Size:"+ Runtime.getRuntime().totalMemory());
-	    	EngineParameter eparams = new EngineParameter("src/resources/main/Mov1M/Mov1M-SRO.json");
+/*	    	System.out.println("Size:"+ Runtime.getRuntime().totalMemory());
+	    	EngineParameter eparams = new EngineParameter("src/resources/main/example/engines/U-CF-Proposal_GenreDate-Pearson-Mahout-Mov1M-100.json");
 	    	UCFProposalEngine engine = new UCFProposalEngine(eparams);
 			engine.train();
-
+*/
 			assertFalse(false);
 		} catch (JsonIOException | JsonSyntaxException e) {
 			// TODO Auto-generated catch block

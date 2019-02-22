@@ -1,6 +1,7 @@
 package br.ufsc.lapesd.orbs.tokit;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -13,6 +14,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.List;
 
 public class EngineParameter {
 	private static final String engineParametersPath = "src/resources/main/engine.json";
@@ -27,11 +29,17 @@ public class EngineParameter {
 		load(engineParametersPath, engineParametersEncoding);
 	}
 	
+	public EngineParameter(JsonObject JSON) {
+		paramsJsonObject = JSON;
+	}
+	
 	public EngineParameter(String[] input) {
 		paramsJsonObject = new JsonObject();
 		paramsJsonObject.addProperty("id", "default");
 		paramsJsonObject.addProperty("description", "Default settings");
-		paramsJsonObject.addProperty("engineFactory", "br.ufsc.lapesd.sro.example.SROEngine");
+		paramsJsonObject.addProperty("engineType", "br.ufsc.lapesd.orbs.core.ProposalEngine");
+		paramsJsonObject.addProperty("engineName", "ORBS");
+		paramsJsonObject.addProperty("servingType", "br.ufsc.lapesd.orbs.tokit.Serving");
 		
 		JsonObject datasource = new JsonObject();
 		JsonObject datasourceParams = new JsonObject();
@@ -146,7 +154,39 @@ public class EngineParameter {
 		}
 	}
 
-	public String getEngine() {
-		return paramsJsonObject.get("engine").getAsString();
+	public String getEngineType() {
+		return paramsJsonObject.get("engineType").getAsString();
+	}
+
+	public String getEngineName() {
+		return paramsJsonObject.get("engineName").getAsString();
+	}
+
+	public String getServingType() {
+		return paramsJsonObject.get("servingType").getAsString();
+	}
+
+	public void setDataSource(List<String> sourceLocation, String enclosure, String delimiter, boolean hasHeaderLine, boolean hasEventTimestamp) {
+		JsonArray ja = new JsonArray();
+		for(String s : sourceLocation) {
+			ja.add(s);
+		}
+		paramsJsonObject.get("datasource").getAsJsonObject().get("params").getAsJsonObject().add("sourceLocation", ja);
+		paramsJsonObject.get("datasource").getAsJsonObject().get("params").getAsJsonObject().addProperty("enclosure", enclosure);
+		paramsJsonObject.get("datasource").getAsJsonObject().get("params").getAsJsonObject().addProperty("delimiter", delimiter);
+		paramsJsonObject.get("datasource").getAsJsonObject().get("params").getAsJsonObject().addProperty("hasHeaderLine", hasHeaderLine);
+		paramsJsonObject.get("datasource").getAsJsonObject().get("params").getAsJsonObject().addProperty("hasEventTimestamp", hasEventTimestamp);
+	}
+
+	public void setTestFile(String testFile) {
+		paramsJsonObject.addProperty("testFile", testFile);		
+	}
+	
+	public void setEngineName(String engineName) {
+		paramsJsonObject.addProperty("engineName", engineName);		
+	}
+
+	public void setServing(String servingType) {
+		paramsJsonObject.addProperty("servingType", servingType);		
 	}
 }

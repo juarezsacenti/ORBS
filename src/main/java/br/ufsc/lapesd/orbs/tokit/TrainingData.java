@@ -1,6 +1,8 @@
 package br.ufsc.lapesd.orbs.tokit;
 
 import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TrainingData {
     private final AbstractMap<String, User> users;

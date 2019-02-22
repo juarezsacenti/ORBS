@@ -1,10 +1,11 @@
 {
   "id": "3",
   "description": "User based - Colaborative Filtering - Classic profile model - Pearson similarity - Mahout framework - Mov1M dataset - 100% sparsity level - engine settings.",
-  "engine": "br.ufsc.lapesd.orbs.example.ucfclassic.UCFClassicEngine",
+  "engineType": "br.ufsc.lapesd.orbs.example.ucfclassic.UCFClassicEngine",
+  "engineName": "Classic100",
   "datasource": {
     "params" : {
-      "sourceLocation": "C:/Users/Juarez Sacenti/Documents/SRO-dev/datasets/ml-1m/ratings.dat",
+      "sourceLocation": ["C:/Users/Juarez Sacenti/Documents/SRO-dev/datasets/ml-1m/ratings.dat"],
       "enclosure": "\"",
       "delimiter": "::",
       "hasHeaderLine": false,
@@ -18,7 +19,8 @@
     {
     "name": "br.ufsc.lapesd.orbs.example.ucfclassic.UCFClassicAlgorithm",
       "params": {
-        "neighborhoodSize": 100,
+        "useTestSeed": false,
+        "neighborhoodSize": 50,
         "nativeEvaluatorEnabled": false,
         "seed": 1,
         "iteration": 10,
@@ -27,5 +29,6 @@
         "seenItemEvents": ["view"],
         "unseenOnly": true
       }
-    }
+    },
+  "servingType": "br.ufsc.lapesd.orbs.tokit.Serving"
 }

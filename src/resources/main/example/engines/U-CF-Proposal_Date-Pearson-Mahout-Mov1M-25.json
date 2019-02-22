@@ -1,10 +1,11 @@
 {
   "id": "40003",
   "description": "User based - Colaborative Filtering - Proposal profile model with genre and release date hierarchy - Pearson similarity - Mahout framework - Mov1M dataset - 100% sparsity level - engine settings.",
-  "engine": "br.ufsc.lapesd.orbs.core.ProposalEngine",
+  "engineType": "br.ufsc.lapesd.orbs.core.ProposalEngine",
+  "engineName": "ORBS_Date25",
   "datasource": {
     "params" : {
-      "sourceLocation": "src/resources/main/example/datasets/Mov1M/Mov1M-25.csv",
+      "sourceLocation": ["src/resources/main/example/datasets/Mov1M/Mov1M-25.csv"],
       "enclosure": "\"",
       "delimiter": ",",
       "hasHeaderLine": false,
@@ -40,7 +41,7 @@
    	  "annotationSources": [ 
           {
             "name": "br.ufsc.lapesd.orbs.core.TTLAnnotationSource",
-            "sourceLocation": "src/resources/main/example/datasets/Mov1M/Mov1M-itemReleaseDate.ttl",
+            "sourceLocation": ["src/resources/main/example/datasets/Mov1M/Mov1M-itemReleaseDate.ttl"],
             "enclosure": "",
             "delimiter": " ",
             "hasHeaderLine": false,
@@ -82,6 +83,7 @@
   "algorithm": {
     "name": "br.ufsc.lapesd.orbs.example.ucfmultiattribute.UCFMultiAttributeAlgorithm",
     "params": {
+      "useTestSeed": false,
       "seed": 1,
       "neighborhoodSize": 100,
       "nativeEvaluatorEnabled": false,
@@ -91,5 +93,6 @@
       "seenItemEvents": ["view"],
       "unseenOnly": true
     }
-  }
+  },
+  "servingType": "br.ufsc.lapesd.orbs.tokit.Serving"
 }

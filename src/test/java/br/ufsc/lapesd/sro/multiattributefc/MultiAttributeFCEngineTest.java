@@ -15,10 +15,10 @@ public class MultiAttributeFCEngineTest {
 	@Test
 	public void test() {
 		try {
-			EngineParameter eparams = new EngineParameter("src/resources/main/Mov1M/Mov1M-MultiAttributeUCF.json");
+/*			EngineParameter eparams = new EngineParameter("src/resources/main/example/engines/U-CF-Multiattribute_Genre-Pearson-Mahout-Mov1M-100.json");
 			UCFMultiAttributeEngine engine = new UCFMultiAttributeEngine(eparams);
 			engine.train();
-
+*/
 			assertFalse(false);
 		} catch (JsonIOException | JsonSyntaxException e) {
 			// TODO Auto-generated catch block

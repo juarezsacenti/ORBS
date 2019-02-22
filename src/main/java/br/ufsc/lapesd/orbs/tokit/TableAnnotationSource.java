@@ -28,7 +28,8 @@ public class TableAnnotationSource implements AnnotationSource {
 		}
         
         String line = "";
-        String sourceLocation = dsp.getSourceLocation();
+        String sourceLocation = dsp.getSourceLocation().get(0);
+
         try (BufferedReader br = new BufferedReader(new FileReader(sourceLocation))) {
         	if(!dsp.hasHeaderLine()) {
         		throw new Exception("TableAnnotationSource file without header.");

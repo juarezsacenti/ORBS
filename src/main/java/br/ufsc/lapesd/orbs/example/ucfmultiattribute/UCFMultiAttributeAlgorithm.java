@@ -49,11 +49,13 @@ public class UCFMultiAttributeAlgorithm extends Algorithm {
 	private Recommender recommender;
 	private NearestNUserNeighborhood neighborhood;
 	private EnsembledSymmetricSimilarity similarity;
+	private boolean useTestSeed;
 	private boolean nativeEvaluatorEnabled;
 	private int neighborhoodSize;
-	public static FileDataModel attributeModel;
+	public static FileDataModel preferenceMatrix;
 	
 	public UCFMultiAttributeAlgorithm(AlgorithmParams algorithmParams) {
+		this.useTestSeed = algorithmParams.useTestSeed();
 		this.neighborhoodSize = algorithmParams.getNeighborhoodSize();
 		this.nativeEvaluatorEnabled = algorithmParams.isNativeEvaluatorEnabled();
 	}
@@ -66,7 +68,7 @@ public class UCFMultiAttributeAlgorithm extends Algorithm {
 				
 		Model model = null;
 		try {			
-			RandomUtils.useTestSeed(); // to not randomize the evaluation result
+			if(this.useTestSeed) { RandomUtils.useTestSeed(); } // to randomize the evaluation result
 			
 			File itemModelFile = ((UCFMultiAttributePreparedData) preparedData).getItemModelFile();
 			List<File> FoIMatrixesFiles = ((UCFMultiAttributePreparedData) preparedData).getFoIMatrixesFiles();
@@ -79,8 +81,8 @@ public class UCFMultiAttributeAlgorithm extends Algorithm {
 			//System.out.println("Files: "+FoIMatrixesFiles);
 			for(File FoIMatrixFile : FoIMatrixesFiles) {
 				System.out.println(FoIMatrixFile.getName());
-				UCFMultiAttributeAlgorithm.attributeModel = new FileDataModel(FoIMatrixFile);
-				s = new PearsonCorrelationSimilarity(UCFMultiAttributeAlgorithm.attributeModel);
+				UCFMultiAttributeAlgorithm.preferenceMatrix = new FileDataModel(FoIMatrixFile);
+				s = new PearsonCorrelationSimilarity(UCFMultiAttributeAlgorithm.preferenceMatrix);
 				
 				users1 = itemModel.getUserIDs();
 				while(users1.hasNext()) {
@@ -109,12 +111,12 @@ public class UCFMultiAttributeAlgorithm extends Algorithm {
 			}
 			this.similarity.save();
 			
-			this.neighborhood = new NearestNUserNeighborhood (neighborhoodSize, this.similarity, UCFMultiAttributeAlgorithm.attributeModel);                
+			this.neighborhood = new NearestNUserNeighborhood (neighborhoodSize, this.similarity, UCFMultiAttributeAlgorithm.preferenceMatrix);                
 
 			this.builder = new RecommenderBuilder() {
 				public Recommender buildRecommender(DataModel itemModel) throws TasteException {
 					UserSimilarity similarity = new EnsembledSymmetricSimilarity("src/resources/main/temp/sim_ensembledSymSim.csv");
-					UserNeighborhood neighborhood = new NearestNUserNeighborhood (neighborhoodSize, similarity, UCFMultiAttributeAlgorithm.attributeModel);                
+					UserNeighborhood neighborhood = new NearestNUserNeighborhood (neighborhoodSize, similarity, UCFMultiAttributeAlgorithm.preferenceMatrix);                
 					return new GenericUserBasedRecommender(itemModel, neighborhood, similarity);                
 				}
 			};
@@ -154,7 +156,7 @@ public class UCFMultiAttributeAlgorithm extends Algorithm {
 				itemScores.add(is);
 			}
 
-			analyse(userId, itemModel, 10);
+			//analyse(userId, itemModel, 10);
 			
 			result = new PredictedResult(itemScores);
 		} catch (Exception e) {
@@ -189,11 +191,11 @@ public class UCFMultiAttributeAlgorithm extends Algorithm {
         System.out.println("#### ANALYSING USER <"+userId+"> ####");
 
         // Attributes of userId's items
-        FastIDSet attributesFromUser = attributeModel.getItemIDsFromUser(userId);
+        FastIDSet attributesFromUser = preferenceMatrix.getItemIDsFromUser(userId);
         System.out.println("|| has items with attribute<percent>:");
 		System.out.print("...");
 		for(long attrId : attributesFromUser) {
-    		System.out.print(" "+attrId+"<"+attributeModel.getPreferenceValue(userId, attrId)+">,");
+    		System.out.print(" "+attrId+"<"+preferenceMatrix.getPreferenceValue(userId, attrId)+">,");
     	}
 		System.out.println();
         
@@ -227,11 +229,11 @@ public class UCFMultiAttributeAlgorithm extends Algorithm {
         	//}
     		//System.out.println();
 
-    		attributesFromUser = attributeModel.getItemIDsFromUser(simUserId);
+    		attributesFromUser = preferenceMatrix.getItemIDsFromUser(simUserId);
             System.out.println("|| has items with attribute<percent>:");
     		System.out.print("...");
     		for(long attrId : attributesFromUser) {
-        		System.out.print(" "+attrId+"<"+attributeModel.getPreferenceValue(simUserId, attrId)+">,");
+        		System.out.print(" "+attrId+"<"+preferenceMatrix.getPreferenceValue(simUserId, attrId)+">,");
         	}
     		System.out.println();
     	}

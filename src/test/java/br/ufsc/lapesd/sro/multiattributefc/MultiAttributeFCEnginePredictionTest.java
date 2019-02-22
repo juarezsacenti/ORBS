@@ -21,7 +21,7 @@ public class MultiAttributeFCEnginePredictionTest {
 	@Test
 	public void test() {
 		try {
-			System.out.println("#######################################################################");
+/*			System.out.println("#######################################################################");
 			System.out.println("Training Engine");	
 			EngineParameter eparams = new EngineParameter("src/resources/main/example/engines/U-CF-Multiattribute_Genre-Pearson-Mahout-Mov1M-100.json");
 			UCFMultiAttributeEngine engine = new UCFMultiAttributeEngine(eparams);
@@ -29,7 +29,7 @@ public class MultiAttributeFCEnginePredictionTest {
 			
 			System.out.println("#######################################################################");
 			System.out.println("Quering Engine");
-/*			DataSource datasource = new DataSource(eparams.getDataSouceParams());
+			DataSourceSplitter datasource = new DataSourceSplitter(eparams.getDataSouceParams());
 			TrainingData td = datasource.readTraining();
 			AbstractMap<String, User> users = td.getUsers();
 
@@ -38,9 +38,9 @@ public class MultiAttributeFCEnginePredictionTest {
 				q = new Query(str, 10, null, null, null);
 				engine.query(q);
 			}
-			*/
+			
 			engine.query(new Query("4169", 10, null, null, null));
-/*			engine.query(new Query("2223", 10, null, null, null));
+			engine.query(new Query("2223", 10, null, null, null));
 			engine.query(new Query("2077", 10, null, null, null));
 			engine.query(new Query("699", 10, null, null, null));
 */

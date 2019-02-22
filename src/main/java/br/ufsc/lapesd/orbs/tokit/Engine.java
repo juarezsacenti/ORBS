@@ -3,6 +3,11 @@ package br.ufsc.lapesd.orbs.tokit;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.ufsc.lapesd.orbs.core.UCFProposalEngine;
+import br.ufsc.lapesd.orbs.example.crossvalidation.ServingToFile;
+import br.ufsc.lapesd.orbs.example.ucfclassic.UCFClassicEngine;
+import br.ufsc.lapesd.orbs.example.ucfmultiattribute.UCFMultiAttributeEngine;
+
 public abstract class Engine {
 	protected DataSource datasource;
 	protected Preparator preparator;
@@ -14,7 +19,19 @@ public abstract class Engine {
 		this.datasource = new DataSource(eparams.getDataSouceParams());
 		this.algorithms = new ArrayList<Algorithm>();
 		this.models = new ArrayList<Model>();
-		this.serving = new Serving();
+		
+   		switch (eparams.getServingType()) {
+		case "br.ufsc.lapesd.orbs.example.crossvalidation.ServingToFile":  
+			this.serving = new ServingToFile(eparams.getEngineName());
+			break;			
+		case "br.ufsc.lapesd.orbs.tokit.Serving":
+			this.serving = new Serving();
+			break;				
+		default:
+			System.out.println("Declared engine no expected. Using ClassicNeighborhoodAnalyzerEngine instead.");
+			this.serving = new Serving();
+			break;		
+		}
 	}
 
 	public void train() {

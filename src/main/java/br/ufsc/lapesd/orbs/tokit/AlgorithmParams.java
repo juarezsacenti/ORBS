@@ -10,10 +10,12 @@ public class AlgorithmParams {
 	    private final List<String> similarItemEvents;
 	    private final boolean unseenOnly;
 	    private final List<String> seenItemEvents;
+		private boolean useTestSeed;
 		private boolean nativeEvaluatorEnabled;
 		private int neighborhoodSize;
 
-	    public AlgorithmParams(long seed, int rank, int iteration, double lambda, List<String> similarItemEvents, boolean unseenOnly, List<String> seenItemEvents) {
+	    public AlgorithmParams(boolean useTestSeed, long seed, int rank, int iteration, double lambda, List<String> similarItemEvents, boolean unseenOnly, List<String> seenItemEvents) {
+	        this.useTestSeed = useTestSeed;
 	        this.seed = seed;
 	        this.rank = rank;
 	        this.iteration = iteration;
@@ -70,5 +72,9 @@ public class AlgorithmParams {
 
 		public int getNeighborhoodSize() {
 			return neighborhoodSize;
+		}
+
+		public boolean useTestSeed() {
+			return useTestSeed;
 		}
 	}

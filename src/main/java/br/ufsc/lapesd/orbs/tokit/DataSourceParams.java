@@ -1,13 +1,15 @@
 package br.ufsc.lapesd.orbs.tokit;
 
+import java.util.List;
+
 public class DataSourceParams {
-    private String sourceLocation;
+    private List<String> sourceLocation;
     private String enclosure;
 	private String delimiter;
 	private boolean hasHeaderLine;
 	private boolean hasEventTimestamp;
 
-	public DataSourceParams(String sourceLocation, String enclosure, String delimiter, boolean hasHeaderLine, boolean hasEventTimestamp) {
+	public DataSourceParams(List<String> sourceLocation, String enclosure, String delimiter, boolean hasHeaderLine, boolean hasEventTimestamp) {
 		this.sourceLocation = sourceLocation;
 		this.delimiter = delimiter;
 		this.enclosure = enclosure;
@@ -15,7 +17,7 @@ public class DataSourceParams {
 		this.hasEventTimestamp = hasEventTimestamp;
 	}
 
-	public String getSourceLocation() {
+	public List<String> getSourceLocation() {
         return sourceLocation;
     }
 

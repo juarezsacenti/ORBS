@@ -31,7 +31,7 @@ public class AnalyzerExample {
     	Engine engine;
     	
     	System.out.println(enginePath);
-    	switch (eparams.getEngine()) {
+    	switch (eparams.getEngineType()) {
 			case "br.ufsc.lapesd.orbs.example.ucfclassic.UCFClassicEngine":  
 				engine = new ClassicNeighborhoodAnalyzerEngine(eparams);
 				break;

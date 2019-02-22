@@ -1,8 +1,5 @@
 package br.ufsc.lapesd.orbs.example.analyzer;
 
-import br.ufsc.lapesd.orbs.example.ucfclassic.UCFClassicModel;
-import br.ufsc.lapesd.orbs.example.ucfclassic.UCFClassicPreparedData;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,6 +27,8 @@ import org.apache.mahout.cf.taste.recommender.Recommender;
 import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 import org.apache.mahout.common.RandomUtils;
 
+import br.ufsc.lapesd.orbs.example.ucfclassic.UCFClassicModel;
+import br.ufsc.lapesd.orbs.example.ucfclassic.UCFClassicPreparedData;
 import br.ufsc.lapesd.orbs.tokit.Algorithm;
 import br.ufsc.lapesd.orbs.tokit.AlgorithmParams;
 import br.ufsc.lapesd.orbs.tokit.ItemScore;
