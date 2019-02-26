@@ -5,7 +5,7 @@
   "engineName": "ORBS_Date100",
   "datasource": {
     "params" : {
-      "sourceLocation": ["C:/Users/Juarez Sacenti/Documents/SRO-dev/datasets/ml-1m/ratings.dat"],
+      "sourceLocation": ["src/resources/main/data/ml-1m/ml-1m/ratings.dat"],
       "enclosure": "\"",
       "delimiter": "::",
       "hasHeaderLine": false,
