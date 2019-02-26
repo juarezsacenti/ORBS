@@ -1,16 +1,12 @@
 package br.ufsc.lapesd.sro.multiattributefc;
 
 import static org.junit.Assert.*;
-
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.junit.Test;
-
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-
 import br.ufsc.lapesd.orbs.example.ucfmultiattribute.EnsembledAsymmetricSimilarity;
 import br.ufsc.lapesd.orbs.example.ucfmultiattribute.EnsembledSymmetricSimilarity;
-
 
 public class EnsembledSimilarityTest {
 
@@ -49,10 +45,12 @@ public class EnsembledSimilarityTest {
 				}
 			}
 			similarity1.save();
-			EnsembledSymmetricSimilarity similarity2 = new EnsembledSymmetricSimilarity("src/resources/main/temp/sim_ensembledAsymSim.csv");
+			EnsembledAsymmetricSimilarity similarity2 = new EnsembledAsymmetricSimilarity("src/resources/main/temp/sim_ensembledAsymSim.csv");
+			EnsembledSymmetricSimilarity similarity3 = new EnsembledSymmetricSimilarity("src/resources/main/temp/sim_ensembledAsymSim.csv");
 
 			assertTrue(similarity1.equals(similarity2));
-
+			assertTrue(similarity1.equals(similarity3));
+			assertTrue(similarity2.equals(similarity3));
 		} catch (JsonIOException | JsonSyntaxException | TasteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
