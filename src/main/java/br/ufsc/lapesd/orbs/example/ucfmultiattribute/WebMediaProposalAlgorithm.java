@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.eval.RecommenderBuilder;
 import org.apache.mahout.cf.taste.eval.RecommenderEvaluator;
@@ -20,7 +19,6 @@ import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.apache.mahout.cf.taste.recommender.Recommender;
 import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 import org.apache.mahout.common.RandomUtils;
-
 import br.ufsc.lapesd.orbs.example.ucfclassic.UCFClassicModel;
 import br.ufsc.lapesd.orbs.tokit.Algorithm;
 import br.ufsc.lapesd.orbs.tokit.AlgorithmParams;
@@ -31,9 +29,9 @@ import br.ufsc.lapesd.orbs.tokit.PreparedData;
 import br.ufsc.lapesd.orbs.tokit.Query;
 
 /*
- * A vizinhança e similaridade entre usuários é calculada a partir do modelo de gênero.
- * A recomendação utiliza o modelo de itens para obter os itens pertencentes a vizinhança e não conhecidos pelo usuário consultante.
- * A estimativa do ranking do item para o usuário consultante é realizada via média da preferência ponderada pela similaridade da vizinhança com o consultante.
+ * A vizinhanÃ§a e similaridade entre usuÃ¡rios Ã© calculada a partir do modelo de gÃªnero.
+ * A recomendaÃ§Ã£o utiliza o modelo de itens para obter os itens pertencentes a vizinhanÃ§a e nÃ£o conhecidos pelo usuÃ¡rio consultante.
+ * A estimativa do ranking do item para o usuÃ¡rio consultante Ã© realizada via mÃ©dia da preferÃªncia ponderada pela similaridade da vizinhanÃ§a com o consultante.
  * */
 public class WebMediaProposalAlgorithm extends Algorithm {
 	private double threshold;

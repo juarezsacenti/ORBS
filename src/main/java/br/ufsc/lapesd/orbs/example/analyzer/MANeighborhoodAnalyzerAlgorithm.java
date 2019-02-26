@@ -10,7 +10,6 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.impl.common.FastIDSet;
 import org.apache.mahout.cf.taste.impl.common.LongPrimitiveIterator;
@@ -21,9 +20,7 @@ import org.apache.mahout.cf.taste.impl.similarity.PearsonCorrelationSimilarity;
 import org.apache.mahout.cf.taste.model.DataModel;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.apache.mahout.common.RandomUtils;
-
 import com.google.common.base.Preconditions;
-
 import br.ufsc.lapesd.orbs.example.ucfclassic.UCFClassicModel;
 import br.ufsc.lapesd.orbs.example.ucfmultiattribute.EnsembledSymmetricSimilarity;
 import br.ufsc.lapesd.orbs.tokit.Algorithm;
@@ -35,11 +32,11 @@ import br.ufsc.lapesd.orbs.tokit.PreparedData;
 import br.ufsc.lapesd.orbs.tokit.Query;
 
 /*
- *  A classe MANeighborhoodAnalyzerAlgorithm È respons·vel pelo algoritmo de an·lise de 
- *  concord‚ncia entre um usu·rio e seus usu·rios vizinhos utilizando funÁıes como 
+ *  A classe MANeighborhoodAnalyzerAlgorithm √© respons√°vel pelo algoritmo de an√°lise de 
+ *  concord√¢ncia entre um usu√°rio e seus usu√°rios vizinhos utilizando fun√ß√µes como 
  *  cohen.kappa, fleiss.kappa, tau de kendall, scott.pi e krippendorff.alpha.
- *  Esta classe produz as medidas de valor mÈdio de concord‚ncia do dataset e
- *  valor de concord‚ncia por usu·rio.
+ *  Esta classe produz as medidas de valor m√©dio de concord√¢ncia do dataset e
+ *  valor de concord√¢ncia por usu√°rio.
  * */
 public class MANeighborhoodAnalyzerAlgorithm extends Algorithm {
 	private DataModel itemModel;

@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.eval.RecommenderBuilder;
 import org.apache.mahout.cf.taste.impl.common.FastIDSet;
@@ -19,9 +18,7 @@ import org.apache.mahout.cf.taste.model.DataModel;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.apache.mahout.cf.taste.recommender.Recommender;
 import org.apache.mahout.common.RandomUtils;
-
 import com.google.common.base.Preconditions;
-
 import br.ufsc.lapesd.orbs.example.ucfclassic.UCFClassicModel;
 import br.ufsc.lapesd.orbs.example.ucfmultiattribute.EnsembledSymmetricSimilarity;
 import br.ufsc.lapesd.orbs.tokit.Algorithm;
@@ -33,11 +30,11 @@ import br.ufsc.lapesd.orbs.tokit.PreparedData;
 import br.ufsc.lapesd.orbs.tokit.Query;
 
 /*
- * A vizinhanÁa e similaridade entre usu·rios È calculada a partir do modelo de gÍnero.
- * A recomendaÁ„o utiliza o modelo de itens para obter os itens pertencentes a vizinhanÁa e n„o conhecidos pelo usu·rio consultante.
- * Corrigido o c·lculo de estimativa do ranking do item para o usu·rio consultante:
- *  - È realizado via mÈdia de atributos do item ponderado pelo perfil de atributos do usu·rio consultante;
- *  - mais mÈdia de avaliaÁıes quando houver ponderada pela similaridade da vizinhanÁa com o consultante
+ * A vizinhan√ßa e similaridade entre usu√°rios √© calculada a partir do modelo de g√™nero.
+ * A recomenda√ß√£o utiliza o modelo de itens para obter os itens pertencentes a vizinhan√ßa e n√£o conhecidos pelo usu√°rio consultante.
+ * Corrigido o c√°lculo de estimativa do ranking do item para o usu√°rio consultante:
+ *  - √© realizado via m√©dia de atributos do item ponderado pelo perfil de atributos do usu√°rio consultante;
+ *  - mais m√©dia de avalia√ß√µes quando houver ponderada pela similaridade da vizinhan√ßa com o consultante
  * */
 public class AnalyzerAlgorithm extends Algorithm {
 	private DataModel itemModel;

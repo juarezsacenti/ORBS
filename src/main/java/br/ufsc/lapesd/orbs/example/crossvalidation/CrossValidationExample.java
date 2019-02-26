@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
-
 import net.recommenders.rival.core.DataModelFactory;
 import net.recommenders.rival.core.DataModelIF;
 import net.recommenders.rival.core.DataModelUtils;
@@ -17,7 +16,6 @@ import net.recommenders.rival.evaluation.metric.error.RMSE;
 import net.recommenders.rival.evaluation.metric.ranking.NDCG;
 import net.recommenders.rival.evaluation.metric.ranking.Precision;
 import net.recommenders.rival.evaluation.strategy.EvaluationStrategy;
-
 import br.ufsc.lapesd.orbs.core.UCFProposalEngine;
 import br.ufsc.lapesd.orbs.example.ucfclassic.UCFClassicEngine;
 import br.ufsc.lapesd.orbs.example.ucfmultiattribute.UCFMultiAttributeEngine;
@@ -138,7 +136,7 @@ public class CrossValidationExample {
     		System.out.println("EngineFold "+ curFold +" will begin training.");
     		engine.train();
 
-            //Query especial para todos os usu·rios do teste, recomendar todos os itens do treino
+            //Query especial para todos os usu√°rios do teste, recomendar todos os itens do treino
     		List<String> ls = new ArrayList<String>();
     		ls.add(testFile);
     		eparams.setDataSource(ls, dsp.getEnclosure(), "	", false, false);

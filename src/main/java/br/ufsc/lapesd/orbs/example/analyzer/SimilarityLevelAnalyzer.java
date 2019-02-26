@@ -2,20 +2,13 @@ package br.ufsc.lapesd.orbs.example.analyzer;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.impl.common.LongPrimitiveIterator;
 import org.apache.mahout.cf.taste.impl.model.file.FileDataModel;
-import org.apache.mahout.cf.taste.impl.similarity.PearsonCorrelationSimilarity;
 import org.apache.mahout.cf.taste.model.DataModel;
-
 import br.ufsc.lapesd.orbs.example.ucfclassic.UCFClassicPreparator;
 import br.ufsc.lapesd.orbs.example.ucfclassic.UCFClassicPreparedData;
 import br.ufsc.lapesd.orbs.example.ucfmultiattribute.EnsembledSymmetricSimilarity;
-import br.ufsc.lapesd.orbs.example.ucfmultiattribute.UCFMultiAttributeAlgorithm;
-import br.ufsc.lapesd.orbs.example.ucfmultiattribute.UCFMultiAttributePreparator;
-import br.ufsc.lapesd.orbs.example.ucfmultiattribute.UCFMultiAttributePreparedData;
 import br.ufsc.lapesd.orbs.tokit.DataSource;
 import br.ufsc.lapesd.orbs.tokit.EngineParameter;
 import br.ufsc.lapesd.orbs.tokit.Preparator;
@@ -23,9 +16,9 @@ import br.ufsc.lapesd.orbs.tokit.PreparedData;
 import br.ufsc.lapesd.orbs.tokit.TrainingData;
 
 /*
- *  A classe SimilaryLevelAnalyzer é responsável pelo algoritmo de análise do
- *  erro médio entre a similaridade entre usuários calculada via matriz de avaliação 
- *  e a similaridade obtida por matriz de preferência.
+ *  A classe SimilaryLevelAnalyzer Ã© responsÃ¡vel pelo algoritmo de anÃ¡lise do
+ *  erro mÃ©dio entre a similaridade entre usuÃ¡rios calculada via matriz de avaliaÃ§Ã£o 
+ *  e a similaridade obtida por matriz de preferÃªncia.
  * */
 public class SimilarityLevelAnalyzer {
 
@@ -73,7 +66,7 @@ public class SimilarityLevelAnalyzer {
 			
 /*			PearsonCorrelationSimilarity similarityMatrix1 = new PearsonCorrelationSimilarity(ratingMatrix);
 			
-			// similaridade preferências
+			// similaridade preferÃªncias
 			
 			datasource = new DataSource(eparams2.getDataSouceParams());
 			TrainingData trainingData2 = datasource.readTraining();

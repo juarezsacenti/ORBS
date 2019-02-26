@@ -1,13 +1,8 @@
 package br.ufsc.lapesd.orbs.example.analyzer;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,10 +10,10 @@ import java.util.List;
 
 /**
  *  Classe que descreve os algoritmos do experimento que contabiliza a quantidade de filmes que possuem 
- *  desvio padrão de notas inferior a um dado limite, formatado por gênero.
- *  Dois métodos podem ser utilizados para selecionar os usuários a serem analisados.
- *  O método selectUsersFromFile seleciona os usuários pertencentes a uma lista descrita no arquivo de entrada.
- *  O método selectUsers seleciona os usuários cuja porcentagem dada dos filmes avaliados sejam de determinado gênero.
+ *  desvio padrÃ£o de notas inferior a um dado limite, formatado por gÃªnero.
+ *  Dois mÃ©todos podem ser utilizados para selecionar os usuÃ¡rios a serem analisados.
+ *  O mÃ©todo selectUsersFromFile seleciona os usuÃ¡rios pertencentes a uma lista descrita no arquivo de entrada.
+ *  O mÃ©todo selectUsers seleciona os usuÃ¡rios cuja porcentagem dada dos filmes avaliados sejam de determinado gÃªnero.
  */
 public class IntraFeatureAnalyzer {
 
@@ -329,7 +324,7 @@ public class IntraFeatureAnalyzer {
 	}
 	
 	/**
-	 *  Método que 
+	 *  MÃ©todo que 
 	 */
 	private static double[] calculeMetrics(List<AnItem> items, int genre, double thRates, double thStd, String refFile) {
         List<AnItem> itemGenreList = prepareItemFeatureList(refFile);  

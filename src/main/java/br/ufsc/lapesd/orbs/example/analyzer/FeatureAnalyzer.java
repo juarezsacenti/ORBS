@@ -16,8 +16,8 @@ import java.util.Map;
 
 /**
  *  Classe que descreve os algoritmos do experimento que, dado um conjunto de dados e uma porcentagem de corte, 
- *  obtém a quantidade de gêneros necessários para contabilizar a dada porcentagem de filmes avaliados de cada usuário, 
- *  formatado em uma tabela de quantidade de gêneros por número de usuários.
+ *  obtÃ©m a quantidade de gÃªneros necessÃ¡rios para contabilizar a dada porcentagem de filmes avaliados de cada usuÃ¡rio, 
+ *  formatado em uma tabela de quantidade de gÃªneros por nÃºmero de usuÃ¡rios.
  **/
 public class FeatureAnalyzer {
 

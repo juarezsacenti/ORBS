@@ -33,7 +33,6 @@ import org.apache.mahout.cf.taste.impl.common.LongPrimitiveIterator;
 import org.apache.mahout.cf.taste.impl.model.file.FileDataModel;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.apache.mahout.cf.taste.recommender.Recommender;
-
 import br.ufsc.lapesd.orbs.core.UCFProposalEngine;
 import br.ufsc.lapesd.orbs.example.ucfclassic.UCFClassicEngine;
 import br.ufsc.lapesd.orbs.example.ucfmultiattribute.UCFMultiAttributeEngine;
@@ -43,7 +42,6 @@ import br.ufsc.lapesd.orbs.tokit.Engine;
 import br.ufsc.lapesd.orbs.tokit.EngineParameter;
 import br.ufsc.lapesd.orbs.tokit.Query;
 import br.ufsc.lapesd.orbs.tokit.TrainingData;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -224,7 +222,7 @@ public final class RiValCrossValidatedRecsys {
     		System.out.println("EngineFold "+ curFold +" will begin training.");
     		engine.train();
 
-            //Query especial para todos os usu·rios do teste, recomendar todos os itens do treino
+            //Query especial para todos os usu√°rios do teste, recomendar todos os itens do treino
     		List<String> ls = new ArrayList<String>();
     		ls.add(testFile);
     		eparams.setDataSource(ls, dsp.getEnclosure(), "	", false, false);
