@@ -142,7 +142,7 @@ public class SimilarityLevelAnalyzer {
 			System.out.println("Comparing similarities");
 			EnsembledSymmetricSimilarity numOfComumItems = new EnsembledSymmetricSimilarity(path);
 			int count = 0;
-			double mae = 0;
+			double sim1, sim2, mae = 0;
 			users1 = ratingMatrix.getUserIDs();
 			while(users1.hasNext()) {
 				userID1 = users1.next();
@@ -152,10 +152,19 @@ public class SimilarityLevelAnalyzer {
 					if((long)userID1 < (long)userID2) { // IGNORING userID1 == userID2
 						if(numOfComumItems.userSimilarity(userID1, userID2) >= TH_BIAS) {
 							// MAE 
-							mae += Math.abs(similarityMatrix2.userSimilarity(userID1, userID2) - similarityMatrix1.userSimilarity(userID1, userID2));
-							count++;
+							sim1 = similarityMatrix1.userSimilarity(userID1, userID2); 
+							sim2 = similarityMatrix2.userSimilarity(userID1, userID2);
+							if((!Double.isNaN(sim1)) &&  (!Double.isNaN(sim2))) {
+								mae += Math.abs(sim1 - sim2);
+								count++;
+							}
+							if(progress+1 % 100000 == 0) {
+								System.out.println(Math.abs(sim1 - sim2) + " ," + sim1 + " ," + sim2);
+							}					
 						}
-						if(progress++ % 100000 == 0) {System.out.println(progress +" / "+ total);}
+						if(progress++ % 100000 == 0) {
+							System.out.println(progress +" / "+ total);
+						}					
 					}
 				}
 			}
