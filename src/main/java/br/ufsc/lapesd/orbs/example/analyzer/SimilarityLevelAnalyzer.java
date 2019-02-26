@@ -2,13 +2,19 @@ package br.ufsc.lapesd.orbs.example.analyzer;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
 import org.apache.mahout.cf.taste.common.TasteException;
+import org.apache.mahout.cf.taste.impl.common.FastIDSet;
 import org.apache.mahout.cf.taste.impl.common.LongPrimitiveIterator;
 import org.apache.mahout.cf.taste.impl.model.file.FileDataModel;
+import org.apache.mahout.cf.taste.impl.similarity.PearsonCorrelationSimilarity;
 import org.apache.mahout.cf.taste.model.DataModel;
 import br.ufsc.lapesd.orbs.example.ucfclassic.UCFClassicPreparator;
 import br.ufsc.lapesd.orbs.example.ucfclassic.UCFClassicPreparedData;
 import br.ufsc.lapesd.orbs.example.ucfmultiattribute.EnsembledSymmetricSimilarity;
+import br.ufsc.lapesd.orbs.example.ucfmultiattribute.UCFMultiAttributePreparator;
+import br.ufsc.lapesd.orbs.example.ucfmultiattribute.UCFMultiAttributePreparedData;
 import br.ufsc.lapesd.orbs.tokit.DataSource;
 import br.ufsc.lapesd.orbs.tokit.EngineParameter;
 import br.ufsc.lapesd.orbs.tokit.Preparator;
@@ -49,8 +55,10 @@ public class SimilarityLevelAnalyzer {
 
     	DataSource datasource;
 		Preparator preparator;
+		LongPrimitiveIterator users1, users2;
+		Long userID1, userID2;
+		
 		try {
-
 			// similaridade classica
 			
 			datasource = new DataSource(eparams1.getDataSouceParams());
@@ -60,11 +68,12 @@ public class SimilarityLevelAnalyzer {
 			File file1 = ((UCFClassicPreparedData) preparedData1).getFile();
 			DataModel ratingMatrix = new FileDataModel(file1);
 
-			String path = "src/resources/main/analyzer/ml-1m/numOfComumItems.csv";
-			saveNumberOfComumItems(ratingMatrix, path);
+			String path = "src/resources/main/analyzer/ml-1m/numOfComumItems.csv";			
+			if(!(new File(path)).exists()) {
+				saveNumberOfComumItems(ratingMatrix, path);
+			}
 			
-			
-/*			PearsonCorrelationSimilarity similarityMatrix1 = new PearsonCorrelationSimilarity(ratingMatrix);
+			PearsonCorrelationSimilarity similarityMatrix1 = new PearsonCorrelationSimilarity(ratingMatrix);
 			
 			// similaridade preferências
 			
@@ -72,24 +81,19 @@ public class SimilarityLevelAnalyzer {
 			TrainingData trainingData2 = datasource.readTraining();
 			preparator = new UCFMultiAttributePreparator(eparams2.getPreparatorParams());
 			PreparedData preparedData2 = preparator.prepare(trainingData2);
-			
-	// BEGIN Preference Similarity
 			List<File> FoIMatrixesFiles = ((UCFMultiAttributePreparedData) preparedData2).getFoIMatrixesFiles();
-			
-			LongPrimitiveIterator users2, users1;
-			int numUsers = ratingMatrix.getNumUsers();
-			System.out.println("NumUsers: "+ numUsers);
-			EnsembledSymmetricSimilarity similarityMatrix2 = new EnsembledSymmetricSimilarity(numUsers);
-
+			FileDataModel preferenceMatrix;
 			PearsonCorrelationSimilarity s;
-			Long userID1, userID2;
+			int numUsers = ratingMatrix.getNumUsers();
+			EnsembledSymmetricSimilarity similarityMatrix2 = new EnsembledSymmetricSimilarity(numUsers);
+			// Preference similarity SUM
+			System.out.println("Preference similarity SUM:");
 			double value, weight = 1;
-			// Similarity summarization
-			//System.out.println("Files: "+FoIMatrixesFiles);
+			int progress = 0, total = numUsers*(numUsers+1)/2;
 			for(File FoIMatrixFile : FoIMatrixesFiles) {
 				System.out.println(FoIMatrixFile.getName());
-				UCFMultiAttributeAlgorithm.preferenceMatrix = new FileDataModel(FoIMatrixFile);
-				s = new PearsonCorrelationSimilarity(UCFMultiAttributeAlgorithm.preferenceMatrix);
+				preferenceMatrix = new FileDataModel(FoIMatrixFile);
+				s = new PearsonCorrelationSimilarity(preferenceMatrix);
 				
 				users1 = ratingMatrix.getUserIDs();
 				while(users1.hasNext()) {
@@ -97,52 +101,68 @@ public class SimilarityLevelAnalyzer {
 					users2 = ratingMatrix.getUserIDs();
 					while(users2.hasNext()) {
 						userID2 = users2.next();
-						//if(userID1%500==0) System.out.println("SUM: "+userID1+", "+userID2);
-						value = similarityMatrix2.userSimilarity(userID1, userID2) + (weight * s.userSimilarity(userID1, userID2));
-						similarityMatrix2.setUserSimilarity(userID1, userID2, value);
+						if((long)userID1 <= (long)userID2) {
+							if(progress++ % 500 == 0) {System.out.println(progress +" / "+ total);}
+							value = similarityMatrix2.userSimilarity(userID1, userID2) + (weight * s.userSimilarity(userID1, userID2));
+							similarityMatrix2.setUserSimilarity(userID1, userID2, value);
+						}
 					}
 				}
 			}
 			
-			// Similarity mean division
+			users1 = null;
+			users2 = null;
+			userID1 = null;
+			userID2 = null;
+			progress = 0;
+			
+			// Preference similarity DIV
+			System.out.println("Preference similarity DIV:");
 			users1 = ratingMatrix.getUserIDs();
 			while(users1.hasNext()) {
 				userID1 = users1.next();
 				users2 = ratingMatrix.getUserIDs();
 				while(users2.hasNext()) {
 					userID2 = users2.next();				
-					//if(userID1%500==0) System.out.println("DIV: "+userID1+", "+userID2);
-					value = (similarityMatrix2.userSimilarity(userID1, userID2) / (double) FoIMatrixesFiles.size());
-					similarityMatrix2.setUserSimilarity(userID1, userID2, value);
+					if((long)userID1 <= (long)userID2) {
+						if(progress++ % 500 == 0) {System.out.println(progress +" / "+ total);}
+						value = (similarityMatrix2.userSimilarity(userID1, userID2) / (double) FoIMatrixesFiles.size());
+						similarityMatrix2.setUserSimilarity(userID1, userID2, value);
+					}
 				}
 			}
-	// END Preference Similarity
 			
-			LongPrimitiveIterator ui1, ui2;
-			Long u1, u2;
-			int count = 0, progress = 0, total = 6040 * 6040;
+			users1 = null;
+			users2 = null;
+			userID1 = null;
+			userID2 = null;
+			progress = 0;
+			
+			// Comparing similarities
+			System.out.println("Comparing similarities");
+			EnsembledSymmetricSimilarity numOfComumItems = new EnsembledSymmetricSimilarity(path);
+			int count = 0;
 			double mae = 0;
-			ui1 = ratingMatrix.getUserIDs();
-			while(ui1.hasNext()) {
-				u1 = ui1.next();
-				ui2 = ratingMatrix.getUserIDs();
-				while(ui2.hasNext()) {
-					u2 = ui2.next();
-					if(!u2.equals(u1)) {
-						// filtro
-						if(numberOfComumItems(u1, u2, ratingMatrix) >= TH_BIAS) {
+			users1 = ratingMatrix.getUserIDs();
+			while(users1.hasNext()) {
+				userID1 = users1.next();
+				users2 = ratingMatrix.getUserIDs();
+				while(users2.hasNext()) {
+					userID2 = users2.next();
+					if((long)userID1 < (long)userID2) { // IGNORING userID1 == userID2
+						if(numOfComumItems.userSimilarity(userID1, userID2) >= TH_BIAS) {
 							// MAE 
-							mae += Math.abs(similarityMatrix2.userSimilarity(u1, u2) - similarityMatrix1.userSimilarity(u1, u2));
+							mae += Math.abs(similarityMatrix2.userSimilarity(userID1, userID2) - similarityMatrix1.userSimilarity(userID1, userID2));
 							count++;
 						}
+						if(progress++ % 100000 == 0) {System.out.println(progress +" / "+ total);}
 					}
-					if(progress++ % 100000 == 0) {System.out.println(progress +" / "+ total);}
 				}
 			}
 			mae = mae / (double) count;
 			
 			System.out.println("count: "+ count + " | mae: " + mae);
-*/		} catch (IOException e) {
+		} catch (IOException e) {
     		System.out.println("There was an IO exception.");
 			e.printStackTrace();
     	} catch (TasteException e) {
@@ -153,20 +173,37 @@ public class SimilarityLevelAnalyzer {
 	}
 
 	private static int numberOfComumItems(Long u1, Long u2, DataModel ratingMatrix) throws TasteException {
-		LongPrimitiveIterator ii1, ii2; 
-		Long i1, i2;
+		FastIDSet is1 = ratingMatrix.getItemIDsFromUser(u1);
+		FastIDSet is2 = ratingMatrix.getItemIDsFromUser(u2);
+		
+		LongPrimitiveIterator itSmall, itBig; 
+		HashSet<Long> itemHash = new HashSet<Long>();
+		if(is1.size() <= is2.size()) {
+			itSmall = ratingMatrix.getItemIDsFromUser(u1).iterator();
+			itBig = ratingMatrix.getItemIDsFromUser(u2).iterator();
+		} else {
+			itSmall = ratingMatrix.getItemIDsFromUser(u2).iterator();
+			itBig = ratingMatrix.getItemIDsFromUser(u1).iterator();			
+		}
+		
+		is1 = null;
+		is2 = null;
+		
+		while(itSmall.hasNext()) {
+			itemHash.add(itSmall.next());
+		}
+		
+		Long itemID;
 		int count = 0;
-		ii1 = ratingMatrix.getItemIDsFromUser(u1).iterator();
-		while(ii1.hasNext()) {
-			i1 = ii1.next();
-			ii2 = ratingMatrix.getItemIDsFromUser(u1).iterator();
-			while(ii2.hasNext()) {
-				i2 = ii2.next();
-				if(i1.equals(i2)) {
-					count++;
-				}
+		while(itBig.hasNext()) {
+			itemID = itBig.next();
+			if(itemHash.contains(itemID)) {
+				count++;
 			}
 		}
+		
+		itemHash = null;
+		
 		return count;
 	}
 	
@@ -176,17 +213,18 @@ public class SimilarityLevelAnalyzer {
 
 		LongPrimitiveIterator ui1, ui2;
 		Long u1, u2;
-		int res, count = 0, progress = 0, total = numUsers * numUsers;
+		int res, progress = 0, total = numUsers*(numUsers+1)/2;
 		ui1 = ratingMatrix.getUserIDs();
 		while(ui1.hasNext()) {
 			u1 = ui1.next();
 			ui2 = ratingMatrix.getUserIDs();
 			while(ui2.hasNext()) {
 				u2 = ui2.next();
-				res = numberOfComumItems(u1, u2, ratingMatrix);
-				numOfComumItemsMatrix.setUserSimilarity(u1, u2, res);
-				count++;
-				if(progress++ % 100000 == 0) {System.out.println(progress +" / "+ total);}
+				if((long) u1 <= (long) u2) {
+					res = numberOfComumItems(u1, u2, ratingMatrix);
+					numOfComumItemsMatrix.setUserSimilarity(u1, u2, res);
+					if(progress++ % 100000 == 0) {System.out.println(progress +" / "+ total);}
+				}
 			}
 		}
 		numOfComumItemsMatrix.save(path);

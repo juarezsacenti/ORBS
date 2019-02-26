@@ -158,7 +158,7 @@ public class EnsembledSymmetricSimilarity implements UserSimilarity {
 	    return null;
 	}
 	
-	int fromMatrixToVector(int index1, int index2) {
+	public int fromMatrixToVector(int index1, int index2) {
 		double result = -1;
 		double i = (double) index1, j = (double) index2;
 		if (i <= j) {
