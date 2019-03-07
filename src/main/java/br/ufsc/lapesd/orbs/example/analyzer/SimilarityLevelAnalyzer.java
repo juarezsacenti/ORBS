@@ -31,8 +31,28 @@ public class SimilarityLevelAnalyzer {
     /**
      * Default bias threshold.
      */
-    public static final int TH_BIAS = 5;
-    	
+    public static final int TH_BIAS = 2;
+
+    /**
+     * Default min preference similarity threshold.
+     */
+    public static final double TH_MIN_PRF_SIM = -1;
+    
+    /**
+     * Default max preference similarity threshold.
+     */
+    public static final double TH_MAX_PRF_SIM = 1;
+    
+    /**
+     * Default min rating similarity threshold.
+     */
+    public static final double TH_MIN_RAT_SIM = -1;
+    
+    /**
+     * Default max rating similarity threshold.
+     */
+    public static final double TH_MAX_RAT_SIM = 1;
+    
 	private final static String[] engines = {
 		"src/resources/main/example/engines/U-CF-Classic-Pearson-Mahout-Mov1M-25.json",                // 0
 		"src/resources/main/example/engines/U-CF-Classic-Pearson-Mahout-Mov1M-100.json",               // 1
@@ -45,7 +65,41 @@ public class SimilarityLevelAnalyzer {
 		"src/resources/main/example/engines/U-CF-Proposal_GenreDate-Pearson-Mahout-Mov1M-25.json",     // 8
 		"src/resources/main/example/engines/U-CF-Proposal_GenreDate-Pearson-Mahout-Mov1M-100.json"	}; // 9
 	
-	public static void main(String[] args) {		
+	public static void main(String[] args) {
+		int thBias = TH_BIAS;
+		double thMinPrf = TH_MIN_PRF_SIM;
+		double thMaxPrf = TH_MAX_PRF_SIM;
+		double thMinRat = TH_MIN_RAT_SIM;
+		double thMaxRat = TH_MAX_RAT_SIM;
+		
+		int length = args.length;
+		for(int i = 0; i < length; ++i) {
+			switch (args[i]) {
+			case "-b":
+				if(++i < length) { thBias = Integer.parseInt(args[i]); }
+				break;
+			
+			case "-minprf":
+				if(++i < length) { thMinPrf = Double.parseDouble(args[i]); }
+				break;
+				
+			case "-maxprf":
+				if(++i < length) { thMaxPrf = Double.parseDouble(args[i]); }
+				break;
+				
+			case "-minrat":
+				if(++i < length) { thMinRat = Double.parseDouble(args[i]); }
+				break;
+				
+			case "-maxrat":
+				if(++i < length) { thMaxRat = Double.parseDouble(args[i]); }
+				break;
+				
+			default:
+				break;
+			}
+		}
+		
 		String enginePath1 = engines[1];
 		String enginePath2 = engines[3];
 		
@@ -102,7 +156,7 @@ public class SimilarityLevelAnalyzer {
 					while(users2.hasNext()) {
 						userID2 = users2.next();
 						if((long)userID1 <= (long)userID2) {
-							if(progress++ % 500 == 0) {System.out.println(progress +" / "+ total);}
+							if(progress++ % 100000 == 0) {System.out.println(progress +" / "+ total);}
 							value = similarityMatrix2.userSimilarity(userID1, userID2) + (weight * s.userSimilarity(userID1, userID2));
 							similarityMatrix2.setUserSimilarity(userID1, userID2, value);
 						}
@@ -125,7 +179,7 @@ public class SimilarityLevelAnalyzer {
 				while(users2.hasNext()) {
 					userID2 = users2.next();				
 					if((long)userID1 <= (long)userID2) {
-						if(progress++ % 500 == 0) {System.out.println(progress +" / "+ total);}
+						if(progress++ % 100000 == 0) {System.out.println(progress +" / "+ total);}
 						value = (similarityMatrix2.userSimilarity(userID1, userID2) / (double) FoIMatrixesFiles.size());
 						similarityMatrix2.setUserSimilarity(userID1, userID2, value);
 					}
@@ -150,11 +204,13 @@ public class SimilarityLevelAnalyzer {
 				while(users2.hasNext()) {
 					userID2 = users2.next();
 					if((long)userID1 < (long)userID2) { // IGNORING userID1 == userID2
-						if(numOfComumItems.userSimilarity(userID1, userID2) >= TH_BIAS) {
-							// MAE 
+						if(numOfComumItems.userSimilarity(userID1, userID2) >= thBias) { // FILTERING TH_BIAS
 							sim1 = similarityMatrix1.userSimilarity(userID1, userID2); 
 							sim2 = similarityMatrix2.userSimilarity(userID1, userID2);
 							if((!Double.isNaN(sim1)) &&  (!Double.isNaN(sim2))) {
+								if(sim1 >= thMinRat && sim1 <= thMaxRat 
+										&& sim2 >= thMinPrf && sim2 <= thMaxPrf ) // FILTERING TH_SIM
+								// MAE
 								mae += Math.abs(sim1 - sim2);
 								count++;
 							}
