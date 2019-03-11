@@ -100,6 +100,7 @@ public class SimilarityLevelAnalyzer {
 				break;
 			}
 		}
+		System.out.println("Running with -b "+ thBias + " -minsim1 "+thMinSim1+" -maxsim1 "+thMaxSim1+" -minsim2 "+thMinSim2+" -maxsim2 "+thMinSim2);
 		
 		String enginePath1 = engines[1];
 		String enginePath2 = engines[3];
@@ -148,10 +149,11 @@ public class SimilarityLevelAnalyzer {
 							sim2 = similarityMatrix2.userSimilarity(userID1, userID2);
 							if((!Double.isNaN(sim1)) &&  (!Double.isNaN(sim2))) {
 								if(sim1 >= thMinSim1 && sim1 <= thMaxSim1 
-										&& sim2 >= thMinSim2 && sim2 <= thMaxSim2 ) // FILTERING TH_SIM
-								// MAE
-								mae += Math.abs(sim1 - sim2);
-								count++;
+										&& sim2 >= thMinSim2 && sim2 <= thMaxSim2 ) {// FILTERING TH_SIM
+									// MAE
+									mae += Math.abs(sim1 - sim2);
+									count++;
+								}
 							}
 							if(progress+1 % 100000 == 0) {
 								System.out.println(Math.abs(sim1 - sim2) + " ," + sim1 + " ," + sim2);
@@ -165,7 +167,7 @@ public class SimilarityLevelAnalyzer {
 			}
 			mae = mae / (double) count;
 			
-			System.out.println("count: "+ count + " | mae: " + mae);
+			System.out.println("Limiar: "+thBias+" | contador: "+ count + " | mae: " + mae);
 		} catch (IOException e) {
     		System.out.println("There was an IO exception.");
 			e.printStackTrace();
